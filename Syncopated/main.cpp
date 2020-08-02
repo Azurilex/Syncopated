@@ -6,34 +6,33 @@
 #include "Libraries/MinHook/MinHook.h"
 #pragma comment(lib, "Libraries/MinHook/libMinHook.x86.lib")
 
-namespace Hook
+namespace lsh
 {
-	DWORD rOLorg = 0;
-	DWORD hookaddr = RLUA_GETTOP_ADDR;
+	int rbx_L_orgiginal = 0;
+	int gettop_hook = RLUA_GETTOP_ADDR;
 
-	int gettopd(DWORD rState)
+	int gettop_detour(DWORD rState)
 	{
-		rOLorg = rState;
+		rbx_L_orgiginal = rState;
 		return (*reinterpret_cast<DWORD*>(rState + 24) - *reinterpret_cast<DWORD*>(rState + 20)) >> 4;
 	}
 
-	void CreateHook()
+	void hook()
 	{
 		MH_Initialize();
-		void* oldhook = reinterpret_cast<void*>(MH_CreateHook(reinterpret_cast<DWORD*>(hookaddr), gettopd,
+		void* oldhook = reinterpret_cast<void*>(MH_CreateHook(reinterpret_cast<LPVOID>(gettop_hook), gettop_detour,
 			nullptr));
-		MH_CreateHook(reinterpret_cast<DWORD*>(hookaddr), gettopd, static_cast<LPVOID*>(oldhook));
-		MH_EnableHook(reinterpret_cast<DWORD*>(hookaddr));
-		MH_DisableHook(reinterpret_cast<DWORD*>(hookaddr));
+		MH_CreateHook(reinterpret_cast<LPVOID>(gettop_hook), gettop_detour, static_cast<LPVOID*>(oldhook));
+		MH_EnableHook(reinterpret_cast<LPVOID>(gettop_hook));
+		MH_DisableHook(reinterpret_cast<LPVOID>(gettop_hook));
 
-		if (rOLorg == 0)
+		if (rbx_L_orgiginal == 0)
 		{
-			void* oldhook = reinterpret_cast<void*>(MH_CreateHook(reinterpret_cast<DWORD*>(hookaddr),
-				gettopd, nullptr));
-			MH_CreateHook(reinterpret_cast<DWORD*>(hookaddr), gettopd, static_cast<LPVOID*>(oldhook));
-			MH_EnableHook(reinterpret_cast<DWORD*>(hookaddr));
+			oldhook = reinterpret_cast<void*>(MH_CreateHook(reinterpret_cast<LPVOID>(gettop_hook), gettop_detour, nullptr));
+			MH_CreateHook(reinterpret_cast<LPVOID>(gettop_hook), gettop_detour, static_cast<LPVOID*>(oldhook));
+			MH_EnableHook(reinterpret_cast<LPVOID>(gettop_hook));
 			while (temporary_state == 0) { Sleep(1); }
-			MH_DisableHook(reinterpret_cast<DWORD*>(hookaddr));
+			MH_DisableHook(reinterpret_cast<LPVOID>(gettop_hook));
 		}
 	}
 }
@@ -71,8 +70,8 @@ int main()
 	case 2:
 		//HOOKING METHOD
 		std::cout << std::endl << "[" << termcolor::magenta << "#" << termcolor::white << "]: STARTING HOOK ON LUA_GETTOP..." << std::endl;
-		Hook::CreateHook();
-		temporary_state = Hook::rOLorg;
+		lsh::hook();
+		temporary_state = lsh::rbx_L_orgiginal;
 		std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: DETACHED HOOK, FOUND A TEMPORARY LUASTATE (" << temporary_state << ")." << std::endl;
 		
 		break;
@@ -84,8 +83,8 @@ int main()
 		//HOOKING METHOD
 		std::cout << std::endl << "ur fuckin braindead and can't type 1 or 2 properly, but we'll just run the hooking method instead of crashing" << std::endl;
 		std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: STARTING HOOK ON LUA_GETTOP..." << std::endl;
-		Hook::CreateHook();
-		temporary_state = Hook::rOLorg;
+		lsh::hook();
+		temporary_state = lsh::rbx_L_orgiginal;
 		std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: DETACHED HOOK, FOUND A TEMPORARY LUASTATE (" << temporary_state << ")." << std::endl;
 		break;
 	}

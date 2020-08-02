@@ -116,8 +116,8 @@ unsigned char hde32_table[];
 void writeshell(unsigned char* address, std::vector<BYTE> sc);
 DWORD eternal_unprotect(DWORD addr);
 
-void variable_jump(DWORD addr);
-void variable_replace(DWORD addr);
+void instruction_jmp(DWORD addr);
+void instruction_jb(DWORD addr);
 
 class brandon_retcheck
 {

@@ -23,16 +23,6 @@ bool Memory::writeMemory(void* address, const void* patch, size_t sz)
 	return VirtualProtect(address, sz, protect, static_cast<PDWORD>(&protect)) != 0;
 }
 
-void* Memory::hook(void* object, int index, void* targetf)
-{
-	int* vftable = *static_cast<int**>(object);
-	auto* previous = reinterpret_cast<void*>(vftable[index]);
-
-	writeMemory(vftable + index, &targetf, sizeof(void*));
-
-	return previous;
-}
-
 void Memory::writeBytes(DWORD addr, BYTE* bytes, int len)
 {
 	auto* backup = new BYTE[len + 32];
@@ -60,54 +50,6 @@ DWORD Memory::comparePattern(DWORD dwAddress, DWORD dwLen, BYTE* bMask, char* sz
 			return
 			static_cast<int>(dwAddress + i);
 	return 0;
-}
-
-const char* Memory::getclass(int self)
-{
-	return (const char*)(*(int(**)(void))(*(int*)self + 16))();
-}
-
-int Memory::findfirstclass(int Instance, const char* Name)
-{
-	DWORD StartOfChildren = *reinterpret_cast<DWORD*>(Instance + 0x2C);
-	DWORD EndOfChildren = *reinterpret_cast<DWORD*>(StartOfChildren + 4);
-
-	for (int i = *(int*)StartOfChildren; i != EndOfChildren; i += 8)
-	{
-		if (memcmp(getclass(*reinterpret_cast<int*>(i)), Name, strlen(Name)) == 0)
-		{
-			return *reinterpret_cast<int*>(i);
-		}
-	}
-	return 0;
-}
-
-int Memory::getdm()
-{
-	int datamodel[] = { 0,0 };
-	((int(__stdcall*)(int*))SCANADDRESS(0xE3C3B0))(datamodel);
-	return datamodel[0] + 68;
-}
-
-void* Memory::placeHook(DWORD address, void* hook, bool revert)
-{
-	DWORD oldprot;
-	if (!revert) {
-		void* oldmem = new void*;
-		void* result = new void*;
-		memcpy(oldmem, reinterpret_cast<void*>(address), sizeof(void*) * 4);
-		VirtualProtect(reinterpret_cast<LPVOID>(address), 1, PAGE_EXECUTE_READWRITE, &oldprot);
-		*reinterpret_cast<char*>(address) = 0xE9; *reinterpret_cast<DWORD*>(address + 1) = reinterpret_cast<DWORD>(hook) - address - 5;
-		memcpy(result, oldmem, sizeof(void*) * 4);
-		VirtualProtect(reinterpret_cast<LPVOID>(address), 1, oldprot, &oldprot);
-		return result;
-	}
-	else {
-		VirtualProtect(reinterpret_cast<LPVOID>(address), 1, PAGE_EXECUTE_READWRITE, &oldprot);
-		memcpy(reinterpret_cast<void*>(address), hook, sizeof(void*) * 4);
-		VirtualProtect(reinterpret_cast<LPVOID>(address), 1, oldprot, &oldprot);
-		return nullptr;
-	}
 }
 
 DWORD Memory::findPattern(DWORD mode, char* content, char* mask)

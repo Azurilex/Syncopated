@@ -12,61 +12,11 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "util.hpp"
 
-namespace GlobalFunctions
-{
-	bool to_bool(std::string str)
-	{
-		std::transform(str.begin(), str.end(), str.begin(), tolower);
-		std::istringstream is(str);
-		bool b;
-		is >> std::boolalpha >> b;
-		return b;
-	}
-
-	std::string replaceAll(std::string subject, const std::string& search, const std::string& replace)
-	{
-		size_t pos = 0;
-		while ((pos = subject.find(search, pos)) != std::string::npos)
-		{
-			subject.replace(pos, search.length(), replace);
-			pos += replace.length();
-		}
-		return subject;
-	}
-
-	std::vector<std::string> splitString(std::string str, char delimiter)
-	{
-		std::vector<std::string> tokens;
-		std::stringstream ss(str);
-		std::string tok;
-
-		while (getline(ss, tok, delimiter))
-			tokens.push_back(tok);
-		return tokens;
-	}
-
-	size_t write_data(void* buffer, size_t size, size_t nmemb, void* param)
-	{
-		std::string& text = *static_cast<std::string*>(param);
-		size_t totalsize = size * nmemb;
-		text.append(static_cast<char*>(buffer), totalsize);
-		return totalsize;
-	}
-}
-
-DWORD rbx_GetParent(DWORD Instance)
-{
-	__asm {
-		mov ecx, Instance
-		mov eax, [ecx + PARENT_OFF]
-	}
-}
-
 void WriteReturn(DWORD addr)
 {
 	DWORD oldP;
 	VirtualProtect(reinterpret_cast<PVOID>(addr), 1, 0x40, &oldP);
-	memset(reinterpret_cast<PVOID>(addr), 0xC3, 1);
+	memset(reinterpret_cast<PVOID>(addr), ret, 1);
 	VirtualProtect(reinterpret_cast<PVOID>(addr), 1, oldP, &oldP);
 }
 

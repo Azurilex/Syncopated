@@ -6,7 +6,7 @@ void writeshell(unsigned char* address, std::vector<BYTE> sc)
 {
 	auto oldProtection = new DWORD;
 	VirtualProtect(static_cast<LPVOID>(address), sc.size(), PAGE_EXECUTE_READWRITE, oldProtection);
-	for (int n = 0; n < sc.size(); n++)
+	for (int n = 0; n < static_cast<int>(sc.size()); n++)
 	{
 		*(address + n) = sc[n];
 	}
@@ -22,7 +22,7 @@ DWORD eternal_unprotect(DWORD addr)
 	{
 		tAddr += 16;
 	}
-	while (!(tAddr[0] == 0x55 && tAddr[1] == 0x8B && tAddr[2] == 0xEC));
+	while (!(tAddr[0] == push && tAddr[1] == mov_r16 && tAddr[2] == in));
 
 	DWORD funcSz = tAddr - reinterpret_cast<BYTE*>(addr);
 
@@ -36,14 +36,14 @@ DWORD eternal_unprotect(DWORD addr)
 	BOOL valid = false;
 	do
 	{
-		if (pos[0] == 0x72 && pos[2] == 0xA1 && pos[7] == 0x8B)
+		if (pos[0] == jb && pos[2] == mov_eax && pos[7] == mov_r16)
 		{
-			*static_cast<BYTE*>(pos) = 0xEB;
+			*static_cast<BYTE*>(pos) = jmp;
 
 			auto cByte = reinterpret_cast<DWORD>(nFunc);
 			do
 			{
-				if (*reinterpret_cast<BYTE*>(cByte) == 0xE8)
+				if (*reinterpret_cast<BYTE*>(cByte) == call)
 				{
 					DWORD oFuncPos = addr + (cByte - reinterpret_cast<DWORD>(nFunc));
 					DWORD oFuncAddr = (oFuncPos + *reinterpret_cast<DWORD*>(oFuncPos + 1)) + 5;
@@ -76,38 +76,20 @@ DWORD eternal_unprotect(DWORD addr)
 	return reinterpret_cast<DWORD>(nFunc);
 }
 
-void variable_jump(DWORD addr)
+void instruction_jmp(DWORD addr)
 {
-	try
-	{
-		DWORD oldProtection;
-		VirtualProtect(reinterpret_cast<void*>(addr), 0x05, PAGE_EXECUTE_READWRITE, &oldProtection);
-		*reinterpret_cast<char*>(addr) = 0xEB;
-		VirtualProtect(reinterpret_cast<void*>(addr), 0x05, oldProtection, &oldProtection);
-	}
-	catch (std::exception e)
-	{
-		std::string error = "Error: ";
-		error += e.what();
-		MessageBoxA(nullptr, error.c_str(), "Exception Thrown!", 0);
-	}
+	DWORD oldProtection;
+	VirtualProtect(reinterpret_cast<void*>(addr), 0x05, PAGE_EXECUTE_READWRITE, &oldProtection);
+	*reinterpret_cast<unsigned char*>(addr) = jmp;
+	VirtualProtect(reinterpret_cast<void*>(addr), 0x05, oldProtection, &oldProtection);
 }
 
-void variable_replace(DWORD addr)
+void instruction_jb(DWORD addr)
 {
-	try
-	{
-		DWORD oldProtection;
-		VirtualProtect(reinterpret_cast<void*>(addr), 5, PAGE_EXECUTE_READWRITE, &oldProtection);
-		*reinterpret_cast<char*>(addr) = 0x72;
-		VirtualProtect(reinterpret_cast<void*>(addr), 5, oldProtection, &oldProtection);
-	}
-	catch (std::exception e)
-	{
-		std::string error = "Error: ";
-		error += e.what();
-		MessageBoxA(nullptr, error.c_str(), "Exception Thrown!", 0);
-	}
+	DWORD oldProtection;
+	VirtualProtect(reinterpret_cast<void*>(addr), 5, PAGE_EXECUTE_READWRITE, &oldProtection);
+	*reinterpret_cast<unsigned char*>(addr) = jb;
+	VirtualProtect(reinterpret_cast<void*>(addr), 5, oldProtection, &oldProtection);
 }
 
 
@@ -149,9 +131,9 @@ unsigned char hde32_table[] = {
 	0xe7, 0x08, 0x00, 0xf0, 0x02, 0x00
 };
 
-DWORD brandon_retcheck::retcheckunprotect(DWORD func)
+DWORD brandon_retcheck::retcheckunprotect(DWORD addr)
 {
-	return static_cast<DWORD>(unprotect(reinterpret_cast<BYTE*>(func)));
+	return static_cast<DWORD>(unprotect(reinterpret_cast<BYTE*>(addr)));
 }
 
 unsigned brandon_retcheck::hde32_disasm(const void* code, hde32s* hs)
@@ -539,7 +521,7 @@ DWORD brandon_retcheck::unprotect(BYTE* funcaddr)
 		return reinterpret_cast<DWORD>(funcaddr);
 	}
 
-	if (total_alloc + func_size > max_alloc)
+	if (total_alloc + static_cast<int>(func_size) > max_alloc)
 		return reinterpret_cast<DWORD>(funcaddr); //failsafe, using too much memory (over 1MB)
 
 	void* new_func = VirtualAlloc(nullptr, func_size, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);

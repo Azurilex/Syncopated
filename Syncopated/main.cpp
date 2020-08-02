@@ -38,7 +38,7 @@ namespace Hook
 	}
 }
 
-DWORD WINAPI main(PVOID lvp_parameter)
+int main()
 {
 	StartConsole("Syncopated");
 	SubTitle("Syncopated - Debug Console\n");
@@ -59,15 +59,15 @@ DWORD WINAPI main(PVOID lvp_parameter)
 	{
 	case 1:
 		//LEGACY SCANNING METHOD
-		std::cout << std::endl << "[" << termcolor::magenta << "#" << termcolor::white << "]: SEARCHING FOR DATAMODEL..." << std::endl;
+		/*std::cout << std::endl << "[" << termcolor::magenta << "#" << termcolor::white << "]: SEARCHING FOR DATAMODEL..." << std::endl;
 		DataModel = Memory::getdm();
 		std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: FOUND DATAMODEL (" << DataModel << "). SEARCHING FOR SCRIPTCONTEXT..." << std::endl;
 		ScriptContext = reinterpret_cast<PDWORD>(Memory::findfirstclass(DataModel, "ScriptContext"));
 		//ScriptContext = reinterpret_cast<PDWORD>(Memory::findPattern(PAGE_READWRITE, reinterpret_cast<char*>(&script_context_bytes), const_cast<char*>("xxxx")));
 		std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: FOUND SCRIPTCONTEXT (" << ScriptContext << "). RUNNING GLOBALSTATE ENCRYPTION..." << std::endl;
 		temporary_state = static_cast<int>(ScriptContext[41] - reinterpret_cast<DWORD>(&ScriptContext[41]));
-		std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: FOUND A TEMPORARY LUASTATE (" << temporary_state << ")." << std::endl;
-		break;
+		std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: FOUND A TEMPORARY LUASTATE (" << temporary_state << ")." << std::endl;*/
+		//break;
 	case 2:
 		//HOOKING METHOD
 		std::cout << std::endl << "[" << termcolor::magenta << "#" << termcolor::white << "]: STARTING HOOK ON LUA_GETTOP..." << std::endl;
@@ -135,7 +135,7 @@ DWORD WINAPI main(PVOID lvp_parameter)
 
 	rlua_getfield(rbx_L, -10002, "print");
 	rlua_pushstring(rbx_L, "done lol");
-	rlua_pcall(rbx_L, 1, 0, 0);
+	rlua_pcall(reinterpret_cast<DWORD*>(rbx_L), 1, 0, 0);
 	
 	//return 0;
 }
@@ -147,7 +147,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 	{
 	case DLL_PROCESS_ATTACH:
 		DisableThreadLibraryCalls(hModule);
-		CreateThread(nullptr, NULL, main, hModule, NULL, nullptr);
+		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(main), hModule, NULL, nullptr);
 	case DLL_THREAD_ATTACH:
 	case DLL_THREAD_DETACH:
 	case DLL_PROCESS_DETACH:

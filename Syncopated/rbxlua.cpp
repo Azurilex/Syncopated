@@ -16,9 +16,9 @@ int rlua_newthread(int a1)
 		ret = rlua_newthread_func_brandon(a1);
 		break;
 	case JBRRBYPASS_DEF:
-		variable_jump(RLUA_NEWTHREAD_JB);
+		instruction_jmp(RLUA_NEWTHREAD_JB);
 		ret = rlua_newthread_func(a1);
-		variable_replace(RLUA_NEWTHREAD_JB);
+		instruction_jb(RLUA_NEWTHREAD_JB);
 		break;
 	case 4:
 	default:
@@ -28,9 +28,9 @@ int rlua_newthread(int a1)
 	return ret;
 }
 
-char rlua_getfield(int a1, int a2, const char* a3)
+int rlua_getfield(int a1, int a2, const char* a3)
 {
-	char ret;
+	int ret;
 	auto rlua_getfield_func_eternal = reinterpret_cast<lua::rlua_getfield_def>(eternal_unprotect(RLUA_GETFIELD_ADDR));
 	auto rlua_getfield_func_brandon = reinterpret_cast<lua::rlua_getfield_def>(brandon_retcheck::retcheckunprotect(
 		RLUA_GETFIELD_ADDR));
@@ -43,9 +43,9 @@ char rlua_getfield(int a1, int a2, const char* a3)
 		ret = rlua_getfield_func_brandon(a1, a2, a3);
 		break;
 	case JBRRBYPASS_DEF:
-		variable_jump(RLUA_GETFIELD_JB);
+		instruction_jmp(RLUA_GETFIELD_JB);
 		ret = rlua_getfield_func(a1, a2, a3);
-		variable_replace(RLUA_GETFIELD_JB);
+		instruction_jb(RLUA_GETFIELD_JB);
 		break;
 	default:
 		ret = rlua_getfield_func(a1, a2, a3);
@@ -54,9 +54,9 @@ char rlua_getfield(int a1, int a2, const char* a3)
 	return ret;
 }
 
-char rlua_pushstring(int a1, const char* a2)
+int rlua_pushstring(int a1, const char* a2)
 {
-	char ret;
+	int ret;
 	auto rlua_pushstring_func_eternal = reinterpret_cast<lua::rlua_pushstring_def>(eternal_unprotect(
 		RLUA_PUSHSTRING_ADDR));
 	auto rlua_pushstring_func_brandon = reinterpret_cast<lua::rlua_pushstring_def>(brandon_retcheck::retcheckunprotect(
@@ -67,13 +67,14 @@ char rlua_pushstring(int a1, const char* a2)
 		ret = rlua_pushstring_func_eternal(a1, a2);
 		break;
 	case BRANDONBYPASS_DEF:
-
 		ret = rlua_pushstring_func_brandon(a1, a2);
 		break;
 	case JBRRBYPASS_DEF:
-		variable_jump(RLUA_PUSHSTRING_JB);
+		//instruction_jmp(RLUA_PUSHSTRING_NIL_JB);
+		instruction_jmp(RLUA_PUSHSTRING_JB);
 		ret = rlua_pushstring_func(a1, a2);
-		variable_replace(RLUA_PUSHSTRING_JB);
+		//instruction_jb(RLUA_PUSHSTRING_NIL_JB);
+		instruction_jb(RLUA_PUSHSTRING_JB);
 		break;
 	default:
 		ret = rlua_pushstring_func(a1, a2);
@@ -82,7 +83,61 @@ char rlua_pushstring(int a1, const char* a2)
 	return ret;
 }
 
-int rlua_pcall(int a1, int a2, int a3, int a4)
+int rlua_pushnumber(int a1, double a2)
+{
+	int ret;
+	auto rlua_pushnumber_func_eternal = reinterpret_cast<lua::rlua_pushnumber_def>(eternal_unprotect(
+		RLUA_PUSHNUMBER_ADDR));
+	auto rlua_pushnumber_func_brandon = reinterpret_cast<lua::rlua_pushnumber_def>(brandon_retcheck::retcheckunprotect(
+		RLUA_PUSHNUMBER_ADDR));
+	switch (retcheck_bypass_interval)
+	{
+	case ETERNALBYPASS_DEF:
+		ret = rlua_pushnumber_func_eternal(a1, a2);
+		break;
+	case BRANDONBYPASS_DEF:
+		ret = rlua_pushnumber_func_brandon(a1, a2);
+		break;
+	case JBRRBYPASS_DEF:
+		instruction_jmp(RLUA_PUSHNUMBER_JB);
+		ret = rlua_pushnumber_func(a1, a2);
+		instruction_jb(RLUA_PUSHNUMBER_JB);
+		break;
+	default:
+		ret = rlua_pushnumber_func(a1, a2);
+		break;
+	}
+	return ret;
+}
+
+int rlua_pushboolean(int a1, bool a2)
+{
+	int ret;
+	auto rlua_pushboolean_func_eternal = reinterpret_cast<lua::rlua_pushboolean_def>(eternal_unprotect(
+		RLUA_PUSHBOOLEAN_ADDR));
+	auto rlua_pushboolean_func_brandon = reinterpret_cast<lua::rlua_pushboolean_def>(brandon_retcheck::retcheckunprotect(
+		RLUA_PUSHBOOLEAN_ADDR));
+	switch (retcheck_bypass_interval)
+	{
+	case ETERNALBYPASS_DEF:
+		ret = rlua_pushboolean_func_eternal(a1, a2);
+		break;
+	case BRANDONBYPASS_DEF:
+		ret = rlua_pushboolean_func_brandon(a1, a2);
+		break;
+	case JBRRBYPASS_DEF:
+		instruction_jmp(RLUA_PUSHBOOLEAN_JB);
+		ret = rlua_pushboolean_func(a1, a2);
+		instruction_jb(RLUA_PUSHBOOLEAN_JB);
+		break;
+	default:
+		ret = rlua_pushboolean_func(a1, a2);
+		break;
+	}
+	return ret;
+}
+
+int rlua_pcall(DWORD *a1, int a2, int a3, int a4)
 {
 	int ret;
 	auto rlua_pcall_func_eternal = reinterpret_cast<lua::rlua_pcall_def>(eternal_unprotect(RLUA_PCALL_ADDR));
@@ -96,9 +151,9 @@ int rlua_pcall(int a1, int a2, int a3, int a4)
 		ret = rlua_pcall_func_brandon(a1, a2, a3, a4);
 		break;
 	case JBRRBYPASS_DEF:
-		variable_jump(RLUA_PCALL_JB);
+		instruction_jmp(RLUA_PCALL_JB);
 		ret = rlua_pcall_func(a1, a2, a3, a4);
-		variable_replace(RLUA_PCALL_JB);
+		instruction_jb(RLUA_PCALL_JB);
 		break;
 	default:
 		ret = rlua_pcall_func(a1, a2, a3, a4);

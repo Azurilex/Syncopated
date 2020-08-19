@@ -12,8 +12,11 @@
 #define UTIL_HPP
 
 #pragma once
+#include <vector>
+#include <sstream>
 #include "globals.hpp"
 
+std::vector<std::string> split(std::string s, ...);
 void WriteReturn(DWORD addr);
 void StartConsole(const char* Title);
 void SubTitle(const char* Message);

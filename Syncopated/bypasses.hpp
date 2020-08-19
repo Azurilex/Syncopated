@@ -111,7 +111,7 @@ typedef struct {
 #pragma warning(disable:4701)
 #endif
 
-unsigned char hde32_table[];
+inline unsigned char hde32_table[];
 
 void writeshell(unsigned char* address, std::vector<BYTE> sc);
 DWORD eternal_unprotect(DWORD addr);
@@ -127,7 +127,7 @@ private:
 	static unsigned int hde32_disasm(const void* code, hde32s* hs);
 	static DWORD unprotect(BYTE* funcaddr);
 	static const int max_alloc;
-	static bool is_prolog(BYTE* addr);
+	static bool is_prolog(const BYTE* addr);
 	static BYTE* get_func_end(BYTE* funcaddr);
 	static bool disable_retcheck(DWORD new_func, DWORD func_len);
 	static BYTE test_function(DWORD func);

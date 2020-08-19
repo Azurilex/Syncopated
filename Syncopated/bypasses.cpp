@@ -4,7 +4,7 @@
 
 void writeshell(unsigned char* address, std::vector<BYTE> sc)
 {
-	auto oldProtection = new DWORD;
+	auto* oldProtection = new DWORD;
 	VirtualProtect(static_cast<LPVOID>(address), sc.size(), PAGE_EXECUTE_READWRITE, oldProtection);
 	for (int n = 0; n < static_cast<int>(sc.size()); n++)
 	{
@@ -139,7 +139,7 @@ DWORD brandon_retcheck::retcheckunprotect(DWORD addr)
 unsigned brandon_retcheck::hde32_disasm(const void* code, hde32s* hs)
 {
 	uint8_t x;
-	uint8_t c;
+	uint8_t c = 0;
 	auto* p = (uint8_t*)code;
 	uint8_t pref = 0;
 	uint8_t *ht = hde32_table, m_mod, m_reg, m_rm, disp_size = 0;
@@ -161,8 +161,12 @@ unsigned brandon_retcheck::hde32_disasm(const void* code, hde32s* hs)
 			hs->p_lock = c;
 			pref |= PRE_LOCK;
 			break;
-		case 0x26: case 0x2e: case 0x36:
-		case 0x3e: case 0x64: case 0x65:
+		case 0x26:
+		case 0x2e:
+		case 0x36:
+		case 0x3e:
+		case 0x64:
+		case 0x65:
 			hs->p_seg = c;
 			pref |= PRE_SEG;
 			break;
@@ -288,12 +292,14 @@ pref_done:
 		{
 			switch (opcode)
 			{
-			case 0x20: case 0x22:
+			case 0x20:
+			case 0x22:
 				m_mod = 3;
 				if (m_reg > 4 || m_reg == 1)
 					goto error_operand;
 				goto no_error_operand;
-			case 0x21: case 0x23:
+			case 0x21:
+			case 0x23:
 				m_mod = 3;
 				if (m_reg == 4 || m_reg == 5)
 					goto error_operand;
@@ -345,7 +351,9 @@ pref_done:
 		{
 			switch (opcode)
 			{
-			case 0x50: case 0xd7: case 0xf7:
+			case 0x50:
+			case 0xd7:
+			case 0xf7:
 				if (pref & (PRE_NONE | PRE_66))
 					goto error_operand;
 				break;
@@ -493,7 +501,7 @@ pref_done:
 
 disasm_done:
 
-	if ((hs->len = static_cast<uint8_t>(p - (unsigned char*)code)) > 15)
+	if ((hs->len = static_cast<uint8_t>(p - static_cast<unsigned char const*>(code))) > 15)
 	{
 		hs->flags |= F_ERROR | F_ERROrLENGTH;
 		hs->len = 15;
@@ -545,7 +553,7 @@ DWORD brandon_retcheck::unprotect(BYTE* funcaddr)
 
 const int brandon_retcheck::max_alloc = 1024 * 1024;
 
-bool brandon_retcheck::is_prolog(BYTE* addr)
+bool brandon_retcheck::is_prolog(const BYTE* addr)
 {
 	return addr[0] == 0x55 && addr[1] == 0x8B && addr[2] == 0xEC;
 }

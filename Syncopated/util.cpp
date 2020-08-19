@@ -9,8 +9,17 @@
  *	A few misc. utility functions that are used all around the solution.
  */
 
-#define _CRT_SECURE_NO_WARNINGS
 #include "util.hpp"
+
+std::vector<std::string> split(std::string s, ...)
+{
+	std::vector<std::string> elems;
+	std::stringstream ss(s);
+	std::istream_iterator<std::string> begin(ss);
+	std::istream_iterator<std::string> end;
+	std::vector<std::string> vstrings(begin, end);
+	return vstrings;
+}
 
 void WriteReturn(DWORD addr)
 {
@@ -25,10 +34,13 @@ void StartConsole(const char* Title)
 	WriteReturn(reinterpret_cast<DWORD>(FreeConsole));
 	AllocConsole();
 	SetConsoleTitle(Title);
-	freopen("conout$", "w", stdout);
-	freopen("conin$", "r", stdin);
-	SetWindowPos(GetConsoleWindow(), HWND_TOPMOST, 0, 900, 0, 0,
-		SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+
+	FILE* fDummy;
+	freopen_s(&fDummy, "CONIN$", "r", stdin);
+	freopen_s(&fDummy, "CONOUT$", "w", stderr);
+	freopen_s(&fDummy, "CONOUT$", "w", stdout);
+
+	SetWindowPos(GetConsoleWindow(), HWND_TOPMOST, 0, 900, 0, 0, SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 }
 
 void SubTitle(const char* Message)

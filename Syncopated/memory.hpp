@@ -17,7 +17,7 @@
 #include "globals.hpp"
 #include <vector>
 
- /* - Memory Definitions - */
+/* - Memory Definitions - */
 class Memory
 {
 	struct memdata
@@ -32,7 +32,7 @@ class Memory
 	static void writeBytes(DWORD addr, BYTE* bytes, int len);
 	static bool compareBytes(const BYTE* pData, const BYTE* bMask, const char* szMask);
 	static DWORD comparePattern(DWORD dwAddress, DWORD dwLen, BYTE* bMask, char* szMask);
-	
+
 public:
 	static DWORD findPattern(DWORD mode, char* content, char* mask);
 	static DWORD scanSignature(char* content, char* mask);

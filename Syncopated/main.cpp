@@ -1,17 +1,19 @@
 #include "util.hpp"
-#include "rbxlua.hpp"
 #include "memory.hpp"
 #include <wintrust.h>
+#include <algorithm>
+#include <cctype>
 #pragma comment(lib, "Wintrust.lib")
+#include "c_execution.hpp"
 #include "Libraries/MinHook/MinHook.h"
 #pragma comment(lib, "Libraries/MinHook/libMinHook.x86.lib")
 
 namespace lsh
 {
-	int rbx_L_orgiginal = 0;
-	int gettop_hook = RLUA_GETTOP_ADDR;
+	static int rbx_L_orgiginal = 0;
+	static const int gettop_hook = RLUA_GETTOP_ADDR;
 
-	int gettop_detour(DWORD rState)
+	int gettop_detour(int rState)
 	{
 		rbx_L_orgiginal = rState;
 		return (*reinterpret_cast<DWORD*>(rState + 24) - *reinterpret_cast<DWORD*>(rState + 20)) >> 4;
@@ -20,15 +22,15 @@ namespace lsh
 	void hook()
 	{
 		MH_Initialize();
-		void* oldhook = reinterpret_cast<void*>(MH_CreateHook(reinterpret_cast<LPVOID>(gettop_hook), gettop_detour,
-			nullptr));
+		void* oldhook = reinterpret_cast<void*>(MH_CreateHook(reinterpret_cast<LPVOID>(gettop_hook), gettop_detour, nullptr));
 		MH_CreateHook(reinterpret_cast<LPVOID>(gettop_hook), gettop_detour, static_cast<LPVOID*>(oldhook));
 		MH_EnableHook(reinterpret_cast<LPVOID>(gettop_hook));
 		MH_DisableHook(reinterpret_cast<LPVOID>(gettop_hook));
 
 		if (rbx_L_orgiginal == 0)
 		{
-			oldhook = reinterpret_cast<void*>(MH_CreateHook(reinterpret_cast<LPVOID>(gettop_hook), gettop_detour, nullptr));
+			oldhook = reinterpret_cast<void*>(MH_CreateHook(reinterpret_cast<LPVOID>(gettop_hook), gettop_detour,
+			                                                nullptr));
 			MH_CreateHook(reinterpret_cast<LPVOID>(gettop_hook), gettop_detour, static_cast<LPVOID*>(oldhook));
 			MH_EnableHook(reinterpret_cast<LPVOID>(gettop_hook));
 			while (temporary_state == 0) { Sleep(1); }
@@ -44,7 +46,7 @@ int main()
 
 	std::cout << termcolor::white << std::endl << "all my homies fucking hate matcha on god" << std::endl << std::endl;
 
-	writeshell(reinterpret_cast<PBYTE>(WinVerifyTrust), { 0x31, 0xC0, 0xC3 });
+	writeshell(reinterpret_cast<PBYTE>(WinVerifyTrust), {0x31, 0xC0, 0xC3});
 
 	std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: " << "RLUASTATE EXPLOIT SELECTION" << termcolor::white << std::endl;
 	std::cout << "[" << termcolor::yellow << "1" << termcolor::white << "]: RUN GLOBALSTATE ENCRYPTION (LEGACY) (BROKEN)" << std::endl;
@@ -53,8 +55,8 @@ int main()
 	int s;
 	std::cout << R"(Please select "1" / "2" / "3": )";
 	std::cin >> s;
-	
-	switch(s)
+
+	switch (s)
 	{
 	case 1:
 		//LEGACY SCANNING METHOD
@@ -73,7 +75,7 @@ int main()
 		lsh::hook();
 		temporary_state = lsh::rbx_L_orgiginal;
 		std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: DETACHED HOOK, FOUND A TEMPORARY LUASTATE (" << temporary_state << ")." << std::endl;
-		
+
 		break;
 	case 3:
 		temporary_state = NULL;
@@ -89,10 +91,10 @@ int main()
 		break;
 	}
 
-	RERUN:
+RERUN:
 	s = 0;
 	std::cout << std::endl;
-	std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]:"  << " RETURN CHECK BYPASS SELECTION" << termcolor::white << std::endl;
+	std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]:" << " RETURN CHECK BYPASS SELECTION" << termcolor::white << std::endl;
 	std::cout << "[" << termcolor::yellow << "1" << termcolor::white << "]: ETERNAL'S BYPASS" << std::endl;
 	std::cout << "[" << termcolor::yellow << "2" << termcolor::white << "]: BRANDON'S BYPASS" << std::endl;
 	std::cout << "[" << termcolor::yellow << "3" << termcolor::white << "]: JBRR BYPASS" << std::endl;
@@ -130,13 +132,32 @@ int main()
 
 	std::cout << std::endl << "[" << termcolor::magenta << "#" << termcolor::white << "]: CREATING NEW THREAD OFF OF TEMPORARY STATE" << std::endl;
 	rbx_L = rlua_newthread(temporary_state);
-	std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: MAIN THREAD CREATED (" << rbx_L << ")" << std::endl;
-
+	std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: MAIN THREAD CREATED (" << rbx_L << ")" << std::endl << std::endl;
 	rlua_getfield(rbx_L, -10002, "print");
-	rlua_pushstring(rbx_L, "done lol");
-	rlua_pcall(reinterpret_cast<DWORD*>(rbx_L), 1, 0, 0);
-	
-	//return 0;
+	rlua_pushstring(rbx_L, "lua c test");
+	rlua_pcall(rbx_L, 1, 0, 0);
+
+	CL result;
+
+	while (true)
+	{
+		std::string str;
+		getline(std::cin, str);
+		std::vector<std::string> arguments = split(str, ' ');
+		//std::cout << arguments.at(0) << arguments.at(1) << std::endl;
+		result = lc_parser::do_string(arguments);
+
+		//rlua_pushstring(rbx_L, "done lol");
+		//rlua_pcall(reinterpret_cast<DWORD*>(rbx_L), 1, 0, 0);
+
+		if (result.errors == 1)
+		{
+			std::cout << "[" << termcolor::red << "ERROR" << termcolor::white << "]: " << result.error.c_str() <<
+				std::endl;
+		}
+	}
+
+	return 0;
 }
 
 

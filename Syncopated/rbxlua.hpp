@@ -26,14 +26,9 @@ namespace lua
 	
 	// EX.
 	typedef int (__cdecl* rlua_getfield_def)(int, int, const char*);
-	typedef int (__cdecl* rlua_pcall_def)(DWORD *, int, int, int);
+	typedef int (__cdecl* rlua_pcall_def)(int, int, int, int);
 	
 }
-
-//ok so ur probably wondering why im using namespaces, because this shit is gay - I KNOW
-//but it's the only way i could think of to incoorporate variable's bypass without making the code even more gay
-//so this is the LEAST gay way to do this. variable's bypass is gay, so this is the least amount of gay it can be
-
 
 // THREAD RELATED
 static lua::rlua_newthread_def rlua_newthread_func = reinterpret_cast<lua::rlua_newthread_def>(RLUA_NEWTHREAD_ADDR);
@@ -58,7 +53,7 @@ static lua::rlua_getfield_def rlua_getfield_func = reinterpret_cast<lua::rlua_ge
 int rlua_getfield(int a1, int a2, const char* a3);
 
 static lua::rlua_pcall_def rlua_pcall_func = reinterpret_cast<lua::rlua_pcall_def>(RLUA_PCALL_ADDR);
-int rlua_pcall(DWORD *a1, int a2, int a3, int a4);
+int rlua_pcall(int a1, int a2, int a3, int a4);
 
 
 

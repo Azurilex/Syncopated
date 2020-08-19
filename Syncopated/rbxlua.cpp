@@ -137,7 +137,7 @@ int rlua_pushboolean(int a1, bool a2)
 	return ret;
 }
 
-int rlua_pcall(DWORD *a1, int a2, int a3, int a4)
+int rlua_pcall(int a1, int a2, int a3, int a4)
 {
 	int ret;
 	auto rlua_pcall_func_eternal = reinterpret_cast<lua::rlua_pcall_def>(eternal_unprotect(RLUA_PCALL_ADDR));

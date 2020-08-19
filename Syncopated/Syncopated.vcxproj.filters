@@ -39,6 +39,9 @@
     <ClCompile Include="rbxlua.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="c_execution.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util.hpp">
@@ -60,6 +63,9 @@
       <Filter>Libraries\MinHook</Filter>
     </ClInclude>
     <ClInclude Include="rbxlua.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c_execution.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

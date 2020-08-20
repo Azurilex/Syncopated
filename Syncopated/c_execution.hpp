@@ -8,14 +8,16 @@
 
 struct CL
 {
-	int errors;
+	int errors = 0;
 	std::string error;
 };
 
 class lc_parser
 {
 public:
-	static CL do_string(std::vector<std::string> arg, rlua instance);
+	lc_parser();
+	~lc_parser();
+	CL do_string(std::vector<std::string> arg, rlua instance);
 private:
 	static bool c_isnumber(const std::string& s);
 	static CL c_error(std::string error);

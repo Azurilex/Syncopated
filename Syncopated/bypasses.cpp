@@ -8,7 +8,7 @@ void writeshell(unsigned char* address, std::vector<BYTE> sc)
 	VirtualProtect(static_cast<LPVOID>(address), sc.size(), PAGE_EXECUTE_READWRITE, oldProtection);
 	for (int n = 0; n < static_cast<int>(sc.size()); n++)
 	{
-		*(address + n) = sc[n];
+		*(address + n) = sc[static_cast<unsigned>(n)];
 	}
 	VirtualProtect(static_cast<LPVOID>(address), sc.size(), *oldProtection, oldProtection);
 	delete oldProtection;
@@ -140,7 +140,7 @@ unsigned brandon_retcheck::hde32_disasm(const void* code, hde32s* hs)
 {
 	uint8_t x;
 	uint8_t c = 0;
-	auto* p = (uint8_t*)code;
+	auto* p = static_cast<uint8_t*>(const_cast<void*>(code));
 	uint8_t pref = 0;
 	uint8_t *ht = hde32_table, m_mod, m_reg, m_rm, disp_size = 0;
 
@@ -547,7 +547,7 @@ DWORD brandon_retcheck::unprotect(BYTE* funcaddr)
 
 	//no retcheck was found, abort
 	VirtualFree(new_func, 0, MEM_RELEASE);
-	VirtualFree(new_func, func_size, MEM_DECOMMIT);
+	//VirtualFree(new_func, func_size, MEM_DECOMMIT); //this is a memory leak, doesn't even need to be run
 	return reinterpret_cast<DWORD>(funcaddr);
 }
 

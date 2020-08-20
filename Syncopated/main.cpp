@@ -1,8 +1,7 @@
 #include "util.hpp"
 #include "memory.hpp"
-#include <wintrust.h>
+#include <WinTrust.h>
 #include <algorithm>
-#include <cctype>
 #pragma comment(lib, "Wintrust.lib")
 #include "c_execution.hpp"
 #include "Libraries/MinHook/MinHook.hpp"
@@ -29,7 +28,7 @@ namespace lsh
 
 		if (rbx_L_orgiginal == 0)
 		{
-			oldhook = reinterpret_cast<void*>(MH_CreateHook(gettop_hook, &gettop_detour,nullptr));
+			oldhook = reinterpret_cast<void*>(MH_CreateHook(gettop_hook, &gettop_detour, nullptr));
 			MH_CreateHook(gettop_hook, &gettop_detour, static_cast<void**>(oldhook));
 			MH_EnableHook(gettop_hook);
 			while (rbx_L_orgiginal == 0) { Sleep(1); }
@@ -43,7 +42,7 @@ int __stdcall main_entry()
 	StartConsole("Syncopated");
 	SubTitle("Syncopated - Debug Console\n");
 
-	std::cout << termcolor::white << std::endl << "all my homies fucking hate matcha on god" << std::endl << std::endl;
+	std::cout << termcolor::white << std::endl << "hey mom, looK! the boys are back in town!!" << std::endl << std::endl;
 
 	writeshell(reinterpret_cast<PBYTE>(WinVerifyTrust), {0x31, 0xC0, 0xC3});
 
@@ -103,6 +102,9 @@ RERUN:
 	std::cout << R"(Please select "1" / "2" / "3" / "4": )";
 	std::cin >> s;
 
+	std::cin.clear();
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
 	//by the way, i use switch cases whenever possible instead of if, else if, else - because i'm not a homosexual!!
 	switch (s)
 	{
@@ -131,25 +133,27 @@ RERUN:
 	}
 
 	std::cout << std::endl << "[" << termcolor::magenta << "#" << termcolor::white << "]: CREATING NEW THREAD OFF OF TEMPORARY STATE" << std::endl;
-	
+
 	rlua* temp = new rlua(temporary_state);
 	rlua main(temp->lua_newthread());
 	delete temp;
-	
+
 	std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: MAIN THREAD CREATED (" << ")" << std::endl << std::endl;
 	main.lua_getfield(-10002, "print");
 	main.lua_pushstring("lua c test");
 	main.lua_pcall(1, 0, 0);
 
-	/*CL result;
-
+	CL result;
+	lc_parser parser;
+	
 	while (true)
 	{
+		std::cout << termcolor::magenta << "> " << termcolor::white;
 		std::string str;
 		getline(std::cin, str);
 		std::vector<std::string> arguments = split(str, ' ');
 		//std::cout << arguments.at(0) << arguments.at(1) << std::endl;
-		result = lc_parser::do_string(arguments, main);
+		result = parser.do_string(arguments, main);
 
 		//rlua_pushstring(rbx_L, "done lol");
 		//rlua_pcall(reinterpret_cast<DWORD*>(rbx_L), 1, 0, 0);
@@ -159,7 +163,7 @@ RERUN:
 			std::cout << "[" << termcolor::red << "ERROR" << termcolor::white << "]: " << result.error.c_str() <<
 				std::endl;
 		}
-	}*/
+	}
 
 	return 0;
 }

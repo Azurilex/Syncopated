@@ -55,16 +55,16 @@ DWORD Memory::findPattern(DWORD mode, char* content, char* mask)
 {
 	SYSTEM_INFO si;
 	GetSystemInfo(&si);
-	DWORD PageSize = si.dwPageSize;
+	const DWORD PageSize = si.dwPageSize;
 	MEMORY_BASIC_INFORMATION mi;
 	for (auto lpAddr = reinterpret_cast<DWORD>(GetProcessHeap()); lpAddr < 0x7FFFFFFF; lpAddr += PageSize)
 	{
-		DWORD vq = VirtualQuery(reinterpret_cast<void*>(lpAddr), &mi, PageSize);
+		const DWORD vq = VirtualQuery(reinterpret_cast<void*>(lpAddr), &mi, PageSize);
 		if (vq == ERROR_INVALID_PARAMETER || vq == 0) break;
 		if (mi.Type == MEM_MAPPED) continue;
 		if (mi.Protect == mode)
 		{
-			int addr = static_cast<int>(comparePattern(lpAddr, PageSize, reinterpret_cast<PBYTE>(content), mask));
+			const int addr = static_cast<int>(comparePattern(lpAddr, PageSize, reinterpret_cast<PBYTE>(content), mask));
 			if (addr != 0)
 			{
 				return static_cast<DWORD>(addr);

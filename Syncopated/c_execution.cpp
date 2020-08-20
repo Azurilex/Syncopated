@@ -10,8 +10,11 @@ std::vector<std::string> lc_parser::split(std::string s, ...)
 	return vstrings;
 }
 
+lc_parser::lc_parser() = default;
+lc_parser::~lc_parser() = default;
+
 CL lc_parser::do_string(std::vector<std::string> arg, rlua instance)
-{
+{	
 	if (arg.at(0) == "lua_getglobal")
 	{
 		if (!(arg.size() == 2))
@@ -26,7 +29,6 @@ CL lc_parser::do_string(std::vector<std::string> arg, rlua instance)
 
 	else if (arg.at(0) == "lua_pushstring")
 	{
-		std::cout << "detected" << std::endl;
 		if (!(arg.size() >= 2))
 		{
 			return c_error("invalid number of arguments for \"lua_pushstring\"");

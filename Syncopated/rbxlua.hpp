@@ -16,44 +16,55 @@
 namespace lua
 {
 	// THREAD RELATED
-	typedef int (__cdecl* rlua_newthread_def)(int);
-	typedef int(__cdecl* rlua_gettop_def)(int);
+	typedef int (__cdecl* lua_newthread_def)(int);
+	typedef int(__cdecl* lua_gettop_def)(int);
 	
 	// PUSH ON STACK
-	typedef int(__stdcall* rlua_pushstring_def)(int, const char*);
-	typedef int(__cdecl* rlua_pushnumber_def)(int, double);
-	typedef int(__cdecl* rlua_pushboolean_def)(int, bool);
+	typedef int(__stdcall* lua_pushstring_def)(int, const char*);
+	typedef int(__stdcall* lua_pushnumber_def)(int, double);
+	typedef int(__cdecl* lua_pushboolean_def)(int, bool);
 	
 	// EX.
-	typedef int (__cdecl* rlua_getfield_def)(int, int, const char*);
-	typedef int (__cdecl* rlua_pcall_def)(int, int, int, int);
+	typedef int (__fastcall* lua_getfield_def)(int, int, const char*);
+	typedef int (__cdecl* lua_pcall_def)(int, int, int, int);
 	
 }
 
-// THREAD RELATED
-static lua::rlua_newthread_def rlua_newthread_func = reinterpret_cast<lua::rlua_newthread_def>(RLUA_NEWTHREAD_ADDR);
-int rlua_newthread(int a1);
+class rlua {
+	static int state;
+public:
+	//CONSTRUCTOR
+	explicit rlua(int rL);
+	//DECONSTRUCTOR
+	~rlua();
 
-static lua::rlua_gettop_def rlua_gettop = reinterpret_cast<lua::rlua_gettop_def>(RLUA_GETTOP_ADDR);
+	
+	// THREAD RELATED
+	const lua::lua_newthread_def lua_newthread_func = reinterpret_cast<lua::lua_newthread_def>(RLUA_NEWTHREAD_ADDR);
+	int lua_newthread(int thread = state);
+
+	const lua::lua_gettop_def lua_gettop = reinterpret_cast<lua::lua_gettop_def>(RLUA_GETTOP_ADDR);
+
+	
+	// PUSH ON STACK
+	const lua::lua_pushstring_def lua_pushstring_func = reinterpret_cast<lua::lua_pushstring_def>(RLUA_PUSHSTRING_ADDR);
+	int lua_pushstring(const char* a2);
+
+	const lua::lua_pushnumber_def lua_pushnumber_func = reinterpret_cast<lua::lua_pushnumber_def>(RLUA_PUSHNUMBER_ADDR);
+	int lua_pushnumber(double a2);
+
+	const lua::lua_pushboolean_def lua_pushboolean_func = reinterpret_cast<lua::lua_pushboolean_def>(RLUA_PUSHBOOLEAN_ADDR);
+	int lua_pushboolean(bool a2);
 
 
-// PUSH ON STACK
-static lua::rlua_pushstring_def rlua_pushstring_func = reinterpret_cast<lua::rlua_pushstring_def>(RLUA_PUSHSTRING_ADDR);
-int rlua_pushstring(int a1, const char* a2);
+	// EX.
+	const lua::lua_getfield_def lua_getfield_func = reinterpret_cast<lua::lua_getfield_def>(RLUA_GETFIELD_ADDR);
+	int lua_getfield(int a2, const char* a3);
 
-static lua::rlua_pushnumber_def rlua_pushnumber_func = reinterpret_cast<lua::rlua_pushnumber_def>(RLUA_PUSHNUMBER_ADDR);
-int rlua_pushnumber(int a1, double a2);
+	const lua::lua_pcall_def lua_pcall_func = reinterpret_cast<lua::lua_pcall_def>(RLUA_PCALL_ADDR);
+	int lua_pcall(int a2, int a3, int a4);
 
-static lua::rlua_pushboolean_def rlua_pushboolean_func = reinterpret_cast<lua::rlua_pushboolean_def>(RLUA_PUSHBOOLEAN_ADDR);
-int rlua_pushboolean(int a1, bool a2);
-
-
-// EX.
-static lua::rlua_getfield_def rlua_getfield_func = reinterpret_cast<lua::rlua_getfield_def>(RLUA_GETFIELD_ADDR);
-int rlua_getfield(int a1, int a2, const char* a3);
-
-static lua::rlua_pcall_def rlua_pcall_func = reinterpret_cast<lua::rlua_pcall_def>(RLUA_PCALL_ADDR);
-int rlua_pcall(int a1, int a2, int a3, int a4);
+};
 
 
 

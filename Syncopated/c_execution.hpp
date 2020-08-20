@@ -15,7 +15,7 @@ struct CL
 class lc_parser
 {
 public:
-	static CL do_string(std::vector<std::string> arg);
+	static CL do_string(std::vector<std::string> arg, rlua instance);
 private:
 	static bool c_isnumber(const std::string& s);
 	static CL c_error(std::string error);

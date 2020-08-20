@@ -11,7 +11,7 @@
 namespace lsh
 {
 	static int rbx_L_orgiginal = 0;
-	static const int gettop_hook = RLUA_GETTOP_ADDR;
+	static int* gettop_hook = reinterpret_cast<int*>(RLUA_GETTOP_ADDR);
 
 	int gettop_detour(int rState)
 	{
@@ -22,24 +22,23 @@ namespace lsh
 	void hook()
 	{
 		MH_Initialize();
-		void* oldhook = reinterpret_cast<void*>(MH_CreateHook(reinterpret_cast<LPVOID>(gettop_hook), gettop_detour, nullptr));
-		MH_CreateHook(reinterpret_cast<LPVOID>(gettop_hook), gettop_detour, static_cast<LPVOID*>(oldhook));
-		MH_EnableHook(reinterpret_cast<LPVOID>(gettop_hook));
-		MH_DisableHook(reinterpret_cast<LPVOID>(gettop_hook));
+		void* oldhook = reinterpret_cast<void*>(MH_CreateHook(gettop_hook, &gettop_detour, nullptr));
+		MH_CreateHook(gettop_hook, &gettop_detour, static_cast<void**>(oldhook));
+		MH_EnableHook(gettop_hook);
+		MH_DisableHook(gettop_hook);
 
 		if (rbx_L_orgiginal == 0)
 		{
-			oldhook = reinterpret_cast<void*>(MH_CreateHook(reinterpret_cast<LPVOID>(gettop_hook), gettop_detour,
-			                                                nullptr));
-			MH_CreateHook(reinterpret_cast<LPVOID>(gettop_hook), gettop_detour, static_cast<LPVOID*>(oldhook));
-			MH_EnableHook(reinterpret_cast<LPVOID>(gettop_hook));
-			while (temporary_state == 0) { Sleep(1); }
-			MH_DisableHook(reinterpret_cast<LPVOID>(gettop_hook));
+			oldhook = reinterpret_cast<void*>(MH_CreateHook(gettop_hook, &gettop_detour,nullptr));
+			MH_CreateHook(gettop_hook, &gettop_detour, static_cast<void**>(oldhook));
+			MH_EnableHook(gettop_hook);
+			while (rbx_L_orgiginal == 0) { Sleep(1); }
+			MH_DisableHook(gettop_hook);
 		}
 	}
 }
 
-int main()
+int __stdcall main_entry()
 {
 	StartConsole("Syncopated");
 	SubTitle("Syncopated - Debug Console\n");
@@ -53,6 +52,7 @@ int main()
 	std::cout << "[" << termcolor::yellow << "2" << termcolor::white << "]: LUA_GETTOP LUA STATE HOOK (MODERN)" << std::endl;
 	std::cout << "[" << termcolor::yellow << "3" << termcolor::white << "]: NONE (BRAINDEAD)" << std::endl;
 	int s;
+	int temporary_state;
 	std::cout << R"(Please select "1" / "2" / "3": )";
 	std::cin >> s;
 
@@ -131,13 +131,17 @@ RERUN:
 	}
 
 	std::cout << std::endl << "[" << termcolor::magenta << "#" << termcolor::white << "]: CREATING NEW THREAD OFF OF TEMPORARY STATE" << std::endl;
-	rbx_L = rlua_newthread(temporary_state);
-	std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: MAIN THREAD CREATED (" << rbx_L << ")" << std::endl << std::endl;
-	rlua_getfield(rbx_L, -10002, "print");
-	rlua_pushstring(rbx_L, "lua c test");
-	rlua_pcall(rbx_L, 1, 0, 0);
+	
+	rlua* temp = new rlua(temporary_state);
+	rlua main(temp->lua_newthread());
+	delete temp;
+	
+	std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: MAIN THREAD CREATED (" << ")" << std::endl << std::endl;
+	main.lua_getfield(-10002, "print");
+	main.lua_pushstring("lua c test");
+	main.lua_pcall(1, 0, 0);
 
-	CL result;
+	/*CL result;
 
 	while (true)
 	{
@@ -145,7 +149,7 @@ RERUN:
 		getline(std::cin, str);
 		std::vector<std::string> arguments = split(str, ' ');
 		//std::cout << arguments.at(0) << arguments.at(1) << std::endl;
-		result = lc_parser::do_string(arguments);
+		result = lc_parser::do_string(arguments, main);
 
 		//rlua_pushstring(rbx_L, "done lol");
 		//rlua_pcall(reinterpret_cast<DWORD*>(rbx_L), 1, 0, 0);
@@ -155,7 +159,7 @@ RERUN:
 			std::cout << "[" << termcolor::red << "ERROR" << termcolor::white << "]: " << result.error.c_str() <<
 				std::endl;
 		}
-	}
+	}*/
 
 	return 0;
 }
@@ -167,7 +171,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 	{
 	case DLL_PROCESS_ATTACH:
 		DisableThreadLibraryCalls(hModule);
-		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(main), hModule, NULL, nullptr);
+		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(main_entry), hModule, NULL, nullptr);
 	case DLL_THREAD_ATTACH:
 	case DLL_THREAD_DETACH:
 	case DLL_PROCESS_DETACH:

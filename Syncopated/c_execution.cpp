@@ -10,7 +10,7 @@ std::vector<std::string> lc_parser::split(std::string s, ...)
 	return vstrings;
 }
 
-CL lc_parser::do_string(std::vector<std::string> arg)
+CL lc_parser::do_string(std::vector<std::string> arg, rlua instance)
 {
 	if (arg.at(0) == "lua_getglobal")
 	{
@@ -21,7 +21,7 @@ CL lc_parser::do_string(std::vector<std::string> arg)
 
 		std::string global = arg.at(1);
 
-		rlua_getfield(rbx_L, -10002, global.c_str());
+		instance.lua_getfield(-10002, global.c_str());
 	}
 
 	else if (arg.at(0) == "lua_pushstring")
@@ -46,7 +46,7 @@ CL lc_parser::do_string(std::vector<std::string> arg)
 			}
 		}
 
-		rlua_pushstring(rbx_L, s.c_str());
+		instance.lua_pushstring(s.c_str());
 	}
 
 	else if (arg.at(0) == "lua_pcall")
@@ -65,7 +65,7 @@ CL lc_parser::do_string(std::vector<std::string> arg)
 		}
 
 		std::cout << stoi(arg.at(1)) << stoi(arg.at(2)) << stoi(arg.at(3)) << std::endl;
-		rlua_pcall(rbx_L, stoi(arg.at(1)), stoi(arg.at(2)), stoi(arg.at(3)));
+		instance.lua_pcall(stoi(arg.at(1)), stoi(arg.at(2)), stoi(arg.at(3)));
 	}
 	else
 	{

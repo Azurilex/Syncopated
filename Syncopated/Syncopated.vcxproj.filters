@@ -59,14 +59,14 @@
     <ClInclude Include="Libraries\termcolor.hpp">
       <Filter>Libraries\termcolor</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\MinHook\MinHook.h">
-      <Filter>Libraries\MinHook</Filter>
-    </ClInclude>
     <ClInclude Include="rbxlua.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="c_execution.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\MinHook\MinHook.hpp">
+      <Filter>Libraries\MinHook</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -153,7 +153,7 @@
     <ClInclude Include="bypasses.hpp" />
     <ClInclude Include="c_execution.hpp" />
     <ClInclude Include="globals.hpp" />
-    <ClInclude Include="Libraries\MinHook\MinHook.h" />
+    <ClInclude Include="Libraries\MinHook\MinHook.hpp" />
     <ClInclude Include="Libraries\termcolor.hpp" />
     <ClInclude Include="memory.hpp" />
     <ClInclude Include="rbxlua.hpp" />

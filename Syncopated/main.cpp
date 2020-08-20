@@ -5,7 +5,7 @@
 #include <cctype>
 #pragma comment(lib, "Wintrust.lib")
 #include "c_execution.hpp"
-#include "Libraries/MinHook/MinHook.h"
+#include "Libraries/MinHook/MinHook.hpp"
 #pragma comment(lib, "Libraries/MinHook/libMinHook.x86.lib")
 
 namespace lsh

@@ -1,12 +1,10 @@
 /*
  *	util.cpp
- *	Isabelle
+ *	Syncopated
  *
- *	Created by Azurilex on 04/27/2019
- *	Last edited by Azurilex on 04/27/2019
- *	Copyright © 2019 Azurilex. All rights reserved.
- *	Copyright © 2019 Ice Bear. All rights reserved.
- *	A few misc. utility functions that are used all around the solution.
+ *	Created by Azurilex on 07/28/2020
+ *	Copyright © 2020 Azurilex. All rights reserved.
+ *	Miscellaneous functions used throughout the source
  */
 
 #include "util.hpp"
@@ -34,7 +32,6 @@ void StartConsole(const char* Title)
 	WriteReturn(reinterpret_cast<DWORD>(FreeConsole));
 	AllocConsole();
 	SetConsoleTitle(Title);
-
 	FILE* fDummy;
 	freopen_s(&fDummy, "CONIN$", "r", stdin);
 	freopen_s(&fDummy, "CONOUT$", "w", stderr);

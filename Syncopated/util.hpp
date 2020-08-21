@@ -1,11 +1,10 @@
 /*
  *	util.hpp
- *	Isabelle
+ *	Syncopated
  *
- *	Created by Azurilex on 04/27/2019
- *	Last edited by Azurilex on 04/27/2019
- *	Copyright © 2019 Azurilex. All rights reserved.
- *	Precompiles functions used in util.cpp
+ *	Created by Azurilex on 07/28/2020
+ *	Copyright © 2020 Azurilex. All rights reserved.
+ *	Miscellaneous functions used throughout the source
  */
 
 #ifndef UTIL_HPP

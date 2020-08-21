@@ -1,3 +1,14 @@
+/*
+ *	bypasses.cpp
+ *	Syncopated
+ *
+ *	Created by Azurilex on 07/28/2020
+ *	Copyright © 2020 Azurilex. All rights reserved.
+ *	Copyright © 2020 Eternal. All rights reserved.
+ *	Copyright © 2020 Brandon. All rights reserved.
+ *	All bypasses used in the source to get around Roblox's checks
+ */
+
 #include "bypasses.hpp"
 #include <string>
 #include <random>

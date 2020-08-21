@@ -1,10 +1,10 @@
 /*
  *	rbxlua.hpp
- *	Isabelle
+ *	Syncopated
  *
- *	Created by Azurilex on 07/19/2020
+ *	Created by Azurilex on 07/28/2020
  *	Copyright © 2020 Azurilex. All rights reserved.
- *	Initializes roblox's lua c functions
+ *	Declerations of rLua C API functions, object oriented.
  */
 
 #ifndef RBXLUA_HPP

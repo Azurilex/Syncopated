@@ -1,3 +1,12 @@
+/*
+ *	c_execution.hpp
+ *	Syncopated
+ *
+ *	Created by Azurilex on 07/28/2020
+ *	Copyright © 2020 Azurilex. All rights reserved.
+ *	rLua C API Parser to allow the user to execute functions for the API, object oriented
+ */
+
 #pragma once
 
 #ifndef C_EXECUTION_HPP

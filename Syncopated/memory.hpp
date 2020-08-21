@@ -1,13 +1,11 @@
 /*
  *	memory.hpp
- *	Isabelle
+ *	Syncopated
  *
- *	Created by Azurilex on 04/27/2019
- *	Last edited by Azurilex on 04/27/2019
- *	Copyright © 2019 Azurilex. All rights reserved.
- *	Copyright © 2019 Ice Bear. All rights reserved.
- *	Copyright © 2019 Louka. All rights reserved.
- *	Precompiles functions used in memory.cpp
+ *	Created by Azurilex on 07/28/2020
+ *	Copyright © 2020 Azurilex. All rights reserved.
+ *	Copyright © 2020 Louka. All rights reserved.
+ *	Functions used to scan Roblox's memory
  */
 
 #ifndef MEMORY_HPP

@@ -1,3 +1,12 @@
+/*
+ *	main.cpp
+ *	Syncopated
+ *
+ *	Created by Azurilex on 07/28/2020
+ *	Copyright © 2020 Azurilex. All rights reserved.
+ *	Initializes exploit after being attached to a process
+ */
+
 #include "util.hpp"
 #include "memory.hpp"
 #include <WinTrust.h>

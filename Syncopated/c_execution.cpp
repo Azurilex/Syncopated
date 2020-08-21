@@ -1,3 +1,12 @@
+/*
+ *	c_execution.cpp
+ *	Syncopated
+ *
+ *	Created by Azurilex on 07/28/2020
+ *	Copyright © 2020 Azurilex. All rights reserved.
+ *	rLua C API Parser to allow the user to execute functions for the API, object oriented
+ */
+
 #include "c_execution.hpp"
 
 std::vector<std::string> lc_parser::split(std::string s, ...)
@@ -66,7 +75,7 @@ CL lc_parser::do_string(std::vector<std::string> arg, rlua instance)
 			}
 		}
 
-		std::cout << stoi(arg.at(1)) << stoi(arg.at(2)) << stoi(arg.at(3)) << std::endl;
+		//std::cout << stoi(arg.at(1)) << stoi(arg.at(2)) << stoi(arg.at(3)) << std::endl;
 		instance.lua_pcall(stoi(arg.at(1)), stoi(arg.at(2)), stoi(arg.at(3)));
 	}
 	else

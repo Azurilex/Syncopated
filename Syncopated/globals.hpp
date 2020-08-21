@@ -1,9 +1,9 @@
 /*
  *	globals.hpp
- *	Isabelle
+ *	Syncopated
  *
- *	Created by Azurilex on 04/27/2019
- *	Copyright © 2019 Azurilex. All rights reserved.
+ *	Created by Azurilex on 07/28/2020
+ *	Copyright © 2020 Azurilex. All rights reserved.
  *	Memory scanning and locations for Roblox
  */
 

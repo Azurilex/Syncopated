@@ -1,12 +1,12 @@
 /*
-* memory.cpp
-* Isabelle
-*
-* Created by Azurilex on 02 / 27 / 2017
-* Last edited by Azurilex on 04 / 08 / 2019
-* Copyright © 2019 Azurilex.All rights reserved.
-* Functions that hacks / scans Roblox's memory.
-*/
+ *	memory.cpp
+ *	Syncopated
+ *
+ *	Created by Azurilex on 07/28/2020
+ *	Copyright © 2020 Azurilex. All rights reserved.
+ *	Copyright © 2020 Louka. All rights reserved.
+ *	Functions used to scan Roblox's memory
+ */
 
 #include "memory.hpp"
 

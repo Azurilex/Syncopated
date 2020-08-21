@@ -1,3 +1,12 @@
+/*
+ *	rbxlua.cpp
+ *	Syncopated
+ *
+ *	Created by Azurilex on 07/28/2020
+ *	Copyright © 2020 Azurilex. All rights reserved.
+ *	Declerations of rLua C API functions, object oriented.
+ */
+
 #include "rbxlua.hpp"
 
 int rlua::state;

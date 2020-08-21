@@ -20,4 +20,3 @@ As most of you know, I love Github. So feel free to fork the repository and make
 @Azurilex - Developing Syncopated, JBRR Retcheck bypass\
 @EternalV3 - Eternal's Retcheck Bypass\
 Brandon - Brandon's Retcheck Bypass\
-@sloppey - Temp-hook Lua State method

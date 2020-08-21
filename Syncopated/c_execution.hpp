@@ -28,6 +28,8 @@ public:
 	~lc_parser();
 	CL do_string(std::vector<std::string> arg, rlua instance);
 private:
+	static bool c_stringtobool(std::string& s);
+	static bool c_isboolean(const std::string& s);
 	static bool c_isnumber(const std::string& s);
 	static CL c_error(std::string error);
 	static std::vector<std::string> split(std::string s, ...);

@@ -9,6 +9,8 @@
 
 #include "c_execution.hpp"
 
+#include <algorithm>
+
 std::vector<std::string> lc_parser::split(std::string s, ...)
 {
 	std::vector<std::string> elems;
@@ -78,6 +80,23 @@ CL lc_parser::do_string(std::vector<std::string> arg, rlua instance)
 		//std::cout << stoi(arg.at(1)) << stoi(arg.at(2)) << stoi(arg.at(3)) << std::endl;
 		instance.lua_pcall(stoi(arg.at(1)), stoi(arg.at(2)), stoi(arg.at(3)));
 	}
+	
+	else if (arg.at(0) == "lua_pushboolean")
+	{
+		if(!(arg.size() == 2))
+		{
+			return c_error("invalid number of arguments for \"lua_pushboolean\"");
+		}
+
+		if (!c_isboolean(arg.at(1)))
+		{
+			return c_error("lua_pushboolean argument at 1 must be a boolean");
+		}
+
+		instance.lua_pushboolean(c_stringtobool(arg.at(1)));
+		
+	}
+	
 	else
 	{
 		return c_error(arg.at(0) + " is undefined, check documentation");
@@ -86,10 +105,27 @@ CL lc_parser::do_string(std::vector<std::string> arg, rlua instance)
 	return CL{0, ""};
 }
 
+bool lc_parser::c_stringtobool(std::string& s)
+{
+	std::transform(s.begin(), s.end(), s.begin(), std::tolower);
+	std::istringstream is(s);
+	bool b;
+	is >> std::boolalpha >> b;
+	return b;
+}
+
+bool lc_parser::c_isboolean(const std::string& s)
+{
+	if (s != "true" && s != "false" && s != "1" && s != "0")
+	{
+		return false;
+	}
+	return true;
+}
+
 bool lc_parser::c_isnumber(const std::string& s)
 {
-	return !s.empty() && std::find_if(s.begin(),
-	                                  s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
+	return !s.empty() && std::find_if(s.begin(), s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
 }
 
 CL lc_parser::c_error(std::string error)

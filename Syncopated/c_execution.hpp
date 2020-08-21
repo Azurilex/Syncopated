@@ -21,11 +21,11 @@ struct CL
 	std::string error;
 };
 
-class lc_parser
+class LC_Parser
 {
 public:
-	lc_parser();
-	~lc_parser();
+	LC_Parser();
+	~LC_Parser();
 	CL do_string(std::vector<std::string> arg, rlua instance);
 private:
 	static bool c_stringtobool(std::string& s);

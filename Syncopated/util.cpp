@@ -19,7 +19,7 @@ std::vector<std::string> split(std::string s, ...)
 	return vstrings;
 }
 
-void WriteReturn(DWORD addr)
+void write_return(DWORD addr)
 {
 	DWORD oldP;
 	VirtualProtect(reinterpret_cast<PVOID>(addr), 1, 0x40, &oldP);
@@ -27,9 +27,9 @@ void WriteReturn(DWORD addr)
 	VirtualProtect(reinterpret_cast<PVOID>(addr), 1, oldP, &oldP);
 }
 
-void StartConsole(const char* Title)
+void start_console(const char* Title)
 {
-	WriteReturn(reinterpret_cast<DWORD>(FreeConsole));
+	write_return(reinterpret_cast<DWORD>(FreeConsole));
 	AllocConsole();
 	SetConsoleTitle(Title);
 	FILE* fDummy;
@@ -40,7 +40,7 @@ void StartConsole(const char* Title)
 	SetWindowPos(GetConsoleWindow(), HWND_TOPMOST, 0, 900, 0, 0, SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 }
 
-void SubTitle(const char* Message)
+void subtitle(const char* Message)
 {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 5);
 	printf("%s", Message);

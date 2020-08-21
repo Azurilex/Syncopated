@@ -10,11 +10,11 @@
 
 #include "memory.hpp"
 
+std::vector<Memory::Memdata> Memory::data;
+
 /* - Scan Address / Scan Signature - */
 
-std::vector<Memory::memdata> Memory::data;
-
-bool Memory::writeMemory(void* address, const void* patch, size_t sz)
+bool Memory::write_memory(void* address, const void* patch, size_t sz)
 {
 	DWORD protect;
 
@@ -23,7 +23,7 @@ bool Memory::writeMemory(void* address, const void* patch, size_t sz)
 	return VirtualProtect(address, sz, protect, static_cast<PDWORD>(&protect)) != 0;
 }
 
-void Memory::writeBytes(DWORD addr, BYTE* bytes, int len)
+void Memory::write_bytes(DWORD addr, BYTE* bytes, int len)
 {
 	auto* backup = new BYTE[static_cast<unsigned>(len) + 32];
 	memcpy(backup, reinterpret_cast<void*>(addr - 16), static_cast<unsigned>(len) + 32);
@@ -35,7 +35,7 @@ void Memory::writeBytes(DWORD addr, BYTE* bytes, int len)
 	VirtualProtect(reinterpret_cast<void*>(addr), static_cast<SIZE_T>(len), oldProt, &oldProt);
 }
 
-bool Memory::compareBytes(const BYTE* pData, const BYTE* bMask, const char* szMask)
+bool Memory::compare_bytes(const BYTE* pData, const BYTE* bMask, const char* szMask)
 {
 	for (; *szMask; ++szMask, ++pData, ++bMask)
 		if (*szMask == 'x' && *pData != *bMask) return false;
@@ -43,15 +43,15 @@ bool Memory::compareBytes(const BYTE* pData, const BYTE* bMask, const char* szMa
 }
 
 
-DWORD Memory::comparePattern(DWORD dwAddress, DWORD dwLen, BYTE* bMask, char* szMask)
+DWORD Memory::compare_pattern(DWORD dwAddress, DWORD dwLen, BYTE* bMask, char* szMask)
 {
 	for (int i = 0; i < static_cast<int>(dwLen); i++)
-		if (compareBytes(reinterpret_cast<BYTE*>(dwAddress + static_cast<DWORD>(i)), bMask, szMask))
+		if (compare_bytes(reinterpret_cast<BYTE*>(dwAddress + static_cast<DWORD>(i)), bMask, szMask))
 			return dwAddress + static_cast<DWORD>(i);
 	return 0;
 }
 
-DWORD Memory::findPattern(DWORD mode, char* content, char* mask)
+DWORD Memory::find_pattern(DWORD mode, char* content, char* mask)
 {
 	SYSTEM_INFO si;
 	GetSystemInfo(&si);
@@ -64,7 +64,7 @@ DWORD Memory::findPattern(DWORD mode, char* content, char* mask)
 		if (mi.Type == MEM_MAPPED) continue;
 		if (mi.Protect == mode)
 		{
-			const int addr = static_cast<int>(comparePattern(lpAddr, PageSize, reinterpret_cast<PBYTE>(content), mask));
+			const int addr = static_cast<int>(compare_pattern(lpAddr, PageSize, reinterpret_cast<PBYTE>(content), mask));
 			if (addr != 0)
 			{
 				return static_cast<DWORD>(addr);
@@ -74,7 +74,7 @@ DWORD Memory::findPattern(DWORD mode, char* content, char* mask)
 	return 0;
 }
 
-DWORD Memory::scanSignature(char* content, char* mask)
+DWORD Memory::scan_signature(char* content, char* mask)
 {
-	return comparePattern(reinterpret_cast<DWORD>(GetProcessHeap()), 0xF00000, reinterpret_cast<PBYTE>(content), mask);
+	return compare_pattern(reinterpret_cast<DWORD>(GetProcessHeap()), 0xF00000, reinterpret_cast<PBYTE>(content), mask);
 }

@@ -48,8 +48,8 @@ namespace lsh
 
 int __stdcall main_entry()
 {
-	StartConsole("Syncopated");
-	SubTitle("Syncopated - Debug Console\n");
+	start_console("Syncopated");
+	subtitle("Syncopated - Debug Console\n");
 
 	std::cout << termcolor::white << std::endl << "hey mom, looK! the boys are back in town!!" << std::endl << std::endl;
 
@@ -59,12 +59,12 @@ int __stdcall main_entry()
 	std::cout << "[" << termcolor::yellow << "1" << termcolor::white << "]: RUN GLOBALSTATE ENCRYPTION (LEGACY) (BROKEN)" << std::endl;
 	std::cout << "[" << termcolor::yellow << "2" << termcolor::white << "]: LUA_GETTOP LUA STATE HOOK (MODERN)" << std::endl;
 	std::cout << "[" << termcolor::yellow << "3" << termcolor::white << "]: NONE (BRAINDEAD)" << std::endl;
-	int s;
+	int i;
 	int temporary_state;
 	std::cout << R"(Please select "1" / "2" / "3": )";
-	std::cin >> s;
+	std::cin >> i;
 
-	switch (s)
+	switch (i)
 	{
 	case 1:
 		//LEGACY SCANNING METHOD
@@ -100,7 +100,7 @@ int __stdcall main_entry()
 	}
 
 RERUN:
-	s = 0;
+	i = 0;
 	std::cout << std::endl;
 	std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]:" << " RETURN CHECK BYPASS SELECTION" << termcolor::white << std::endl;
 	std::cout << "[" << termcolor::yellow << "1" << termcolor::white << "]: ETERNAL'S BYPASS" << std::endl;
@@ -109,25 +109,26 @@ RERUN:
 	std::cout << "[" << termcolor::yellow << "4" << termcolor::white << "]: NONE" << std::endl;
 	std::cout << "[" << termcolor::yellow << "0" << termcolor::white << "]: MORE INFORMATION REGARDING EACH BYPASS" << std::endl;
 	std::cout << R"(Please select "1" / "2" / "3" / "4": )";
-	std::cin >> s;
+	std::cin >> i;
 
 	std::cin.clear();
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 	//by the way, i use switch cases whenever possible instead of if, else if, else - because i'm not a homosexual!!
-	switch (s)
+	rlua* temp = new rlua(temporary_state);
+	switch (i)
 	{
 	case 1:
-		retcheck_bypass_interval = ETERNALBYPASS_DEF;
+		temp->set_bypass(ETERNALBYPASS_DEF);
 		break;
 	case 2:
-		retcheck_bypass_interval = BRANDONBYPASS_DEF;
+		temp->set_bypass(BRANDONBYPASS_DEF);
 		break;
 	case 3:
-		retcheck_bypass_interval = JBRRBYPASS_DEF;
+		temp->set_bypass(JBRRBYPASS_DEF);
 		break;
 	case 4:
-		retcheck_bypass_interval = NULL;
+		temp->set_bypass(NULL);
 		break;
 	case 0:
 		std::cout << std::endl;
@@ -137,14 +138,13 @@ RERUN:
 		std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: NONE -> No retcheck bypass will be used, this causes a shutdown following the execution of an rLua C API function. However, this will not effect the RESULT, the game will still shutdown, but the code will continue to run and execute properly." << std::endl;
 		goto RERUN; //yes i used a fucking label, i'm sorry.
 	default:
-		retcheck_bypass_interval = ETERNALBYPASS_DEF;
+		temp->set_bypass(ETERNALBYPASS_DEF);
 		break;
 	}
 
 	std::cout << std::endl << "[" << termcolor::magenta << "#" << termcolor::white << "]: CREATING NEW THREAD OFF OF TEMPORARY STATE" << std::endl;
-
-	rlua* temp = new rlua(temporary_state);
 	rlua main(temp->lua_newthread());
+	main.set_bypass(temp->get_bypass());
 	delete temp;
 
 	std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: MAIN THREAD CREATED (" << ")" << std::endl << std::endl;
@@ -153,7 +153,7 @@ RERUN:
 	main.lua_pcall(1, 0, 0);
 
 	CL result;
-	lc_parser parser;
+	LC_Parser parser;
 	
 	while (true)
 	{

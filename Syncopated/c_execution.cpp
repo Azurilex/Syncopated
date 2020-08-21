@@ -11,7 +11,7 @@
 
 #include <algorithm>
 
-std::vector<std::string> lc_parser::split(std::string s, ...)
+std::vector<std::string> LC_Parser::split(std::string s, ...)
 {
 	std::vector<std::string> elems;
 	std::stringstream ss(s);
@@ -21,10 +21,10 @@ std::vector<std::string> lc_parser::split(std::string s, ...)
 	return vstrings;
 }
 
-lc_parser::lc_parser() = default;
-lc_parser::~lc_parser() = default;
+LC_Parser::LC_Parser() = default;
+LC_Parser::~LC_Parser() = default;
 
-CL lc_parser::do_string(std::vector<std::string> arg, rlua instance)
+CL LC_Parser::do_string(std::vector<std::string> arg, rlua instance)
 {	
 	if (arg.at(0) == "lua_getglobal")
 	{
@@ -96,6 +96,30 @@ CL lc_parser::do_string(std::vector<std::string> arg, rlua instance)
 		instance.lua_pushboolean(c_stringtobool(arg.at(1)));
 		
 	}
+
+	else if (arg.at(0) == "setretcheckbypass")
+	{
+		if (!(arg.size() >= 2))
+		{
+			return c_error("invalid number of arguments for \"setretcheckbypass\"");
+		}
+
+		if (!c_isnumber(arg.at(1)))
+		{
+			return c_error("setretcheckbypass argument at 1 must be an int");
+		}
+
+		int i = std::stoi(arg.at(1));
+
+		if (i <= 4 && i >= 1) {
+
+			instance.set_bypass(i);
+		}
+		else
+		{
+			return c_error("setretcheckbypass argument at 1 must be >=0 and <=3");
+		}
+	}
 	
 	else
 	{
@@ -105,7 +129,7 @@ CL lc_parser::do_string(std::vector<std::string> arg, rlua instance)
 	return CL{0, ""};
 }
 
-bool lc_parser::c_stringtobool(std::string& s)
+bool LC_Parser::c_stringtobool(std::string& s)
 {
 	std::transform(s.begin(), s.end(), s.begin(), std::tolower);
 	std::istringstream is(s);
@@ -114,7 +138,7 @@ bool lc_parser::c_stringtobool(std::string& s)
 	return b;
 }
 
-bool lc_parser::c_isboolean(const std::string& s)
+bool LC_Parser::c_isboolean(const std::string& s)
 {
 	if (s != "true" && s != "false" && s != "1" && s != "0")
 	{
@@ -123,12 +147,12 @@ bool lc_parser::c_isboolean(const std::string& s)
 	return true;
 }
 
-bool lc_parser::c_isnumber(const std::string& s)
+bool LC_Parser::c_isnumber(const std::string& s)
 {
 	return !s.empty() && std::find_if(s.begin(), s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
 }
 
-CL lc_parser::c_error(std::string error)
+CL LC_Parser::c_error(std::string error)
 {
 	return CL{1, error};
 }

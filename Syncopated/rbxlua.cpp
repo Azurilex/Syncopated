@@ -21,8 +21,8 @@ rlua::~rlua() = default;
 int rlua::lua_newthread(int thread)
 {
 	const auto eternal = reinterpret_cast<lua::lua_newthread_def>(eternal_unprotect(RLUA_NEWTHREAD_ADDR));
-	const auto brandon = reinterpret_cast<lua::lua_newthread_def>(brandon_retcheck::retcheckunprotect(RLUA_NEWTHREAD_ADDR));
-	switch (retcheck_bypass_interval)
+	const auto brandon = reinterpret_cast<lua::lua_newthread_def>(Bypass::retcheck_unprotect(RLUA_NEWTHREAD_ADDR));
+	switch (interval)
 	{
 	case ETERNALBYPASS_DEF:
 		return eternal(thread);
@@ -43,8 +43,8 @@ int rlua::lua_newthread(int thread)
 int rlua::lua_getfield(int a2, const char* a3)
 {
 	const auto eternal = reinterpret_cast<lua::lua_getfield_def>(eternal_unprotect(RLUA_GETFIELD_ADDR));
-	const auto brandon = reinterpret_cast<lua::lua_getfield_def>(brandon_retcheck::retcheckunprotect(RLUA_GETFIELD_ADDR));
-	switch (retcheck_bypass_interval)
+	const auto brandon = reinterpret_cast<lua::lua_getfield_def>(Bypass::retcheck_unprotect(RLUA_GETFIELD_ADDR));
+	switch (interval)
 	{
 	case ETERNALBYPASS_DEF:
 		return eternal(state, a2, a3);
@@ -65,8 +65,8 @@ int rlua::lua_getfield(int a2, const char* a3)
 int rlua::lua_pushstring(const char* a2)
 {
 	const auto eternal = reinterpret_cast<lua::lua_pushstring_def>(eternal_unprotect(RLUA_PUSHSTRING_ADDR));
-	const auto brandon = reinterpret_cast<lua::lua_pushstring_def>(brandon_retcheck::retcheckunprotect(RLUA_PUSHSTRING_ADDR));
-	switch (retcheck_bypass_interval)
+	const auto brandon = reinterpret_cast<lua::lua_pushstring_def>(Bypass::retcheck_unprotect(RLUA_PUSHSTRING_ADDR));
+	switch (interval)
 	{
 	case ETERNALBYPASS_DEF:
 		return eternal(state, a2);
@@ -89,8 +89,8 @@ int rlua::lua_pushstring(const char* a2)
 int rlua::lua_pushnumber(double a2)
 {
 	const auto eternal = reinterpret_cast<lua::lua_pushnumber_def>(eternal_unprotect(RLUA_PUSHNUMBER_ADDR));
-	const auto brandon = reinterpret_cast<lua::lua_pushnumber_def>(brandon_retcheck::retcheckunprotect(RLUA_PUSHNUMBER_ADDR));
-	switch (retcheck_bypass_interval)
+	const auto brandon = reinterpret_cast<lua::lua_pushnumber_def>(Bypass::retcheck_unprotect(RLUA_PUSHNUMBER_ADDR));
+	switch (interval)
 	{
 	case ETERNALBYPASS_DEF:
 		return eternal(state, a2);
@@ -111,8 +111,8 @@ int rlua::lua_pushnumber(double a2)
 int rlua::lua_pushboolean(bool a2)
 {
 	const auto eternal = reinterpret_cast<lua::lua_pushboolean_def>(eternal_unprotect(RLUA_PUSHBOOLEAN_ADDR));
-	const auto brandon = reinterpret_cast<lua::lua_pushboolean_def>(brandon_retcheck::retcheckunprotect(RLUA_PUSHBOOLEAN_ADDR));
-	switch (retcheck_bypass_interval)
+	const auto brandon = reinterpret_cast<lua::lua_pushboolean_def>(Bypass::retcheck_unprotect(RLUA_PUSHBOOLEAN_ADDR));
+	switch (interval)
 	{
 	case ETERNALBYPASS_DEF:
 		return eternal(state, a2);
@@ -133,8 +133,8 @@ int rlua::lua_pushboolean(bool a2)
 int rlua::lua_pcall(int a2, int a3, int a4)
 {
 	const auto eternal = reinterpret_cast<lua::lua_pcall_def>(eternal_unprotect(RLUA_PCALL_ADDR));
-	const auto brandon = reinterpret_cast<lua::lua_pcall_def>(brandon_retcheck::retcheckunprotect(RLUA_PCALL_ADDR));
-	switch (retcheck_bypass_interval)
+	const auto brandon = reinterpret_cast<lua::lua_pcall_def>(Bypass::retcheck_unprotect(RLUA_PCALL_ADDR));
+	switch (interval)
 	{
 	case ETERNALBYPASS_DEF:
 		return eternal(state, a2, a3, a4);
@@ -150,4 +150,14 @@ int rlua::lua_pcall(int a2, int a3, int a4)
 	default:
 		return lua_pcall_func(state, a2, a3, a4);
 	}
+}
+
+int rlua::get_bypass()
+{
+	return interval;
+}
+
+void rlua::set_bypass(int i)
+{
+	interval = i;
 }

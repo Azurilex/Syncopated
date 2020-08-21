@@ -130,10 +130,10 @@ DWORD eternal_unprotect(DWORD addr);
 void instruction_jmp(DWORD addr);
 void instruction_jb(DWORD addr);
 
-class brandon_retcheck
+class Bypass
 {
 public:
-	static DWORD retcheckunprotect(DWORD addr);
+	static DWORD retcheck_unprotect(DWORD addr);
 private:
 	static unsigned int hde32_disasm(const void* code, hde32s* hs);
 	static DWORD unprotect(BYTE* funcaddr);

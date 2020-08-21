@@ -142,12 +142,12 @@ unsigned char hde32_table[] = {
 	0xe7, 0x08, 0x00, 0xf0, 0x02, 0x00
 };
 
-DWORD brandon_retcheck::retcheckunprotect(DWORD addr)
+DWORD Bypass::retcheck_unprotect(DWORD addr)
 {
 	return static_cast<DWORD>(unprotect(reinterpret_cast<BYTE*>(addr)));
 }
 
-unsigned brandon_retcheck::hde32_disasm(const void* code, hde32s* hs)
+unsigned Bypass::hde32_disasm(const void* code, hde32s* hs)
 {
 	uint8_t x;
 	uint8_t c = 0;
@@ -521,7 +521,7 @@ disasm_done:
 	return static_cast<unsigned int>(hs->len);
 }
 
-DWORD brandon_retcheck::unprotect(BYTE* funcaddr)
+DWORD Bypass::unprotect(BYTE* funcaddr)
 {
 	static int total_alloc;
 	static std::map<DWORD, DWORD> cache;
@@ -562,14 +562,14 @@ DWORD brandon_retcheck::unprotect(BYTE* funcaddr)
 	return reinterpret_cast<DWORD>(funcaddr);
 }
 
-const int brandon_retcheck::max_alloc = 1024 * 1024;
+const int Bypass::max_alloc = 1024 * 1024;
 
-bool brandon_retcheck::is_prolog(const BYTE* addr)
+bool Bypass::is_prolog(const BYTE* addr)
 {
 	return addr[0] == 0x55 && addr[1] == 0x8B && addr[2] == 0xEC;
 }
 
-BYTE* brandon_retcheck::get_func_end(BYTE* funcaddr)
+BYTE* Bypass::get_func_end(BYTE* funcaddr)
 {
 	BYTE* addr = funcaddr + 0x10;
 	while (true)
@@ -587,7 +587,7 @@ BYTE* brandon_retcheck::get_func_end(BYTE* funcaddr)
 	return addr;
 }
 
-bool brandon_retcheck::disable_retcheck(DWORD new_func, DWORD func_len)
+bool Bypass::disable_retcheck(DWORD new_func, DWORD func_len)
 {
 	bool has_retcheck = false;
 	DWORD disasm_ptr = new_func;
@@ -609,7 +609,7 @@ bool brandon_retcheck::disable_retcheck(DWORD new_func, DWORD func_len)
 	return has_retcheck;
 }
 
-BYTE brandon_retcheck::test_function(DWORD func)
+BYTE Bypass::test_function(DWORD func)
 {
 	__try
 	{
@@ -623,7 +623,7 @@ BYTE brandon_retcheck::test_function(DWORD func)
 }
 
 
-void brandon_retcheck::fix_calls(DWORD new_func, DWORD orig_func, DWORD func_len)
+void Bypass::fix_calls(DWORD new_func, DWORD orig_func, DWORD func_len)
 {
 	DWORD disasm_ptr = new_func;
 	while (disasm_ptr - new_func < func_len)

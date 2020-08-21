@@ -18,22 +18,22 @@
 /* - Memory Definitions - */
 class Memory
 {
-	struct memdata
+	struct Memdata
 	{
 		DWORD addr;
 		BYTE* backup;
 		int len;
 	};
 
-	static std::vector<memdata> data;
-	static bool writeMemory(void* address, const void* patch, size_t sz);
-	static void writeBytes(DWORD addr, BYTE* bytes, int len);
-	static bool compareBytes(const BYTE* pData, const BYTE* bMask, const char* szMask);
-	static DWORD comparePattern(DWORD dwAddress, DWORD dwLen, BYTE* bMask, char* szMask);
+	static std::vector<Memdata> data;
+	static bool write_memory(void* address, const void* patch, size_t sz);
+	static void write_bytes(DWORD addr, BYTE* bytes, int len);
+	static bool compare_bytes(const BYTE* pData, const BYTE* bMask, const char* szMask);
+	static DWORD compare_pattern(DWORD dwAddress, DWORD dwLen, BYTE* bMask, char* szMask);
 
 public:
-	static DWORD findPattern(DWORD mode, char* content, char* mask);
-	static DWORD scanSignature(char* content, char* mask);
+	static DWORD find_pattern(DWORD mode, char* content, char* mask);
+	static DWORD scan_signature(char* content, char* mask);
 };
 
 #endif

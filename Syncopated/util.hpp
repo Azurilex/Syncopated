@@ -16,7 +16,7 @@
 #include "globals.hpp"
 
 std::vector<std::string> split(std::string s, ...);
-void WriteReturn(DWORD addr);
-void StartConsole(const char* Title);
-void SubTitle(const char* Message);
+void write_return(DWORD addr);
+void start_console(const char* Title);
+void subtitle(const char* Message);
 #endif

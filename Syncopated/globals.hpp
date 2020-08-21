@@ -84,6 +84,5 @@ enum opcodes
 inline PDWORD ScriptContext;
 inline int DataModel;
 inline const char* PlayerName;
-inline int retcheck_bypass_interval;
 
 #endif

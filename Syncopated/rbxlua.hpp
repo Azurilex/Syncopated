@@ -32,6 +32,7 @@ namespace lua
 
 class rlua {
 	static int state;
+	int interval;
 public:
 	//CONSTRUCTOR
 	explicit rlua(int rL);
@@ -64,6 +65,8 @@ public:
 	const lua::lua_pcall_def lua_pcall_func = reinterpret_cast<lua::lua_pcall_def>(RLUA_PCALL_ADDR);
 	int lua_pcall(int a2, int a3, int a4);
 
+	int get_bypass();
+	void set_bypass(int i);
 };
 
 

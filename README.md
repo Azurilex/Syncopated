@@ -19,4 +19,4 @@ As most of you know, I love Github. So feel free to fork the repository and make
 ## Credits
 [@Azurilex](https://twitter.com/Azurilex) - Developing Syncopated, JBRR Retcheck bypass\
 [@Eternal](https://github.com/EternalV3) - Eternal's Retcheck Bypass\
-Brandon - Brandon's Retcheck Bypass\
+Brandon - Brandon's Retcheck Bypass

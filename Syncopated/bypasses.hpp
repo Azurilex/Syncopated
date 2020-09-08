@@ -127,8 +127,7 @@ inline unsigned char hde32_table[];
 void writeshell(unsigned char* address, std::vector<BYTE> sc);
 DWORD eternal_unprotect(DWORD addr);
 
-void instruction_jmp(DWORD addr);
-void instruction_jb(DWORD addr);
+void write_instruction(DWORD addr, opcodes o);
 
 class Bypass
 {

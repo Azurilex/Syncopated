@@ -87,22 +87,13 @@ DWORD eternal_unprotect(DWORD addr)
 	return reinterpret_cast<DWORD>(nFunc);
 }
 
-void instruction_jmp(DWORD addr)
+void write_instruction(DWORD addr, opcodes o)
 {
-	DWORD oldProtection;
-	VirtualProtect(reinterpret_cast<void*>(addr), 0x05, PAGE_EXECUTE_READWRITE, &oldProtection);
-	*reinterpret_cast<unsigned char*>(addr) = jmp;
-	VirtualProtect(reinterpret_cast<void*>(addr), 0x05, oldProtection, &oldProtection);
+	DWORD old_prot;
+	VirtualProtect(reinterpret_cast<void*>(addr), 0x05, PAGE_EXECUTE_READWRITE, &old_prot);
+	*reinterpret_cast<unsigned char*>(addr) = o;
+	VirtualProtect(reinterpret_cast<void*>(addr), 0x05, old_prot, &old_prot);
 }
-
-void instruction_jb(DWORD addr)
-{
-	DWORD oldProtection;
-	VirtualProtect(reinterpret_cast<void*>(addr), 5, PAGE_EXECUTE_READWRITE, &oldProtection);
-	*reinterpret_cast<unsigned char*>(addr) = jb;
-	VirtualProtect(reinterpret_cast<void*>(addr), 5, oldProtection, &oldProtection);
-}
-
 
 unsigned char hde32_table[] = {
 	0xa3, 0xa8, 0xa3, 0xa8, 0xa3, 0xa8, 0xa3, 0xa8, 0xa3, 0xa8, 0xa3, 0xa8, 0xa3, 0xa8, 0xa3,

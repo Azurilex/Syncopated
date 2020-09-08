@@ -23,9 +23,12 @@ namespace lua
 	typedef int(__stdcall* lua_pushstring_def)(int, const char*);
 	typedef int(__stdcall* lua_pushnumber_def)(int, double);
 	typedef int(__cdecl* lua_pushboolean_def)(int, bool);
+
+	//INDEX THROUGH STACK
+	typedef int(__fastcall* lua_getfield_def)(int, int, const char*);
+	typedef const char* (__fastcall* lua_tolstring_def)(int, int, size_t);
 	
 	// EX.
-	typedef int (__fastcall* lua_getfield_def)(int, int, const char*);
 	typedef int (__cdecl* lua_pcall_def)(int, int, int, int);
 	
 }
@@ -57,17 +60,22 @@ public:
 	const lua::lua_pushboolean_def lua_pushboolean_func = reinterpret_cast<lua::lua_pushboolean_def>(RLUA_PUSHBOOLEAN_ADDR);
 	int lua_pushboolean(bool a2);
 
-
-	// EX.
+	//INDEX THROUGH STACK
 	const lua::lua_getfield_def lua_getfield_func = reinterpret_cast<lua::lua_getfield_def>(RLUA_GETFIELD_ADDR);
 	int lua_getfield(int a2, const char* a3);
 
+	const lua::lua_tolstring_def lua_tolstring_func = reinterpret_cast<lua::lua_tolstring_def>(RLUA_TOLSTRING_ADDR);
+	const char* lua_tolstring(int a2, size_t a3);
+
+	// EX.
 	const lua::lua_pcall_def lua_pcall_func = reinterpret_cast<lua::lua_pcall_def>(RLUA_PCALL_ADDR);
 	int lua_pcall(int a2, int a3, int a4);
 
 	int get_bypass();
 	void set_bypass(int i);
 };
+
+std::string get_localplayer(rlua entity);
 
 
 

@@ -151,6 +151,9 @@ RERUN:
 	main.lua_getfield(-10002, "print");
 	main.lua_pushstring("lua c test");
 	main.lua_pcall(1, 0, 0);
+	
+
+	std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: LocalPlayer -> " << get_localplayer(main) << std::endl;
 
 	CL result;
 	LC_Parser parser;

@@ -24,7 +24,7 @@ std::vector<std::string> LC_Parser::split(std::string s, ...)
 LC_Parser::LC_Parser() = default;
 LC_Parser::~LC_Parser() = default;
 
-CL LC_Parser::do_string(std::vector<std::string> arg, rlua instance)
+CL LC_Parser::do_string(std::vector<std::string> arg, rlua entity)
 {	
 	if (arg.at(0) == "lua_getglobal")
 	{
@@ -35,7 +35,7 @@ CL LC_Parser::do_string(std::vector<std::string> arg, rlua instance)
 
 		std::string global = arg.at(1);
 
-		instance.lua_getfield(-10002, global.c_str());
+		entity.lua_getfield(-10002, global.c_str());
 	}
 
 	else if (arg.at(0) == "lua_pushstring")
@@ -59,7 +59,13 @@ CL LC_Parser::do_string(std::vector<std::string> arg, rlua instance)
 			}
 		}
 
-		instance.lua_pushstring(s.c_str());
+		const char* c = s.c_str();
+		if (std::strcmp(c, "nil") == 0)
+		{
+			c = NULL;
+		}
+
+		entity.lua_pushstring(c);
 	}
 
 	else if (arg.at(0) == "lua_pcall")
@@ -78,7 +84,7 @@ CL LC_Parser::do_string(std::vector<std::string> arg, rlua instance)
 		}
 
 		//std::cout << stoi(arg.at(1)) << stoi(arg.at(2)) << stoi(arg.at(3)) << std::endl;
-		instance.lua_pcall(stoi(arg.at(1)), stoi(arg.at(2)), stoi(arg.at(3)));
+		entity.lua_pcall(stoi(arg.at(1)), stoi(arg.at(2)), stoi(arg.at(3)));
 	}
 	
 	else if (arg.at(0) == "lua_pushboolean")
@@ -93,7 +99,7 @@ CL LC_Parser::do_string(std::vector<std::string> arg, rlua instance)
 			return c_error("lua_pushboolean argument at 1 must be a boolean");
 		}
 
-		instance.lua_pushboolean(c_stringtobool(arg.at(1)));
+		entity.lua_pushboolean(c_stringtobool(arg.at(1)));
 		
 	}
 
@@ -113,7 +119,7 @@ CL LC_Parser::do_string(std::vector<std::string> arg, rlua instance)
 
 		if (i <= 4 && i >= 1) {
 
-			instance.set_bypass(i);
+			entity.set_bypass(i);
 		}
 		else
 		{

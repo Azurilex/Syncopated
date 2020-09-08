@@ -26,7 +26,7 @@ class LC_Parser
 public:
 	LC_Parser();
 	~LC_Parser();
-	CL do_string(std::vector<std::string> arg, rlua instance);
+	CL do_string(std::vector<std::string> arg, rlua entity);
 private:
 	static bool c_stringtobool(std::string& s);
 	static bool c_isboolean(const std::string& s);

@@ -62,7 +62,7 @@ CL LC_Parser::do_string(std::vector<std::string> arg, rlua entity)
 		const char* c = s.c_str();
 		if (std::strcmp(c, "nil") == 0)
 		{
-			c = NULL;
+			c = nullptr;
 		}
 
 		entity.lua_pushstring(c);

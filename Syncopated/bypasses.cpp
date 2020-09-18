@@ -87,6 +87,7 @@ DWORD eternal_unprotect(DWORD addr)
 	return reinterpret_cast<DWORD>(nFunc);
 }
 
+//im a fucking genius
 void write_instruction(DWORD addr, opcodes o)
 {
 	DWORD old_prot;

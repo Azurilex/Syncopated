@@ -34,7 +34,7 @@ namespace lua
 }
 
 class rlua {
-	static int state;
+	int state;
 	int interval;
 public:
 	//CONSTRUCTOR
@@ -73,6 +73,7 @@ public:
 
 	int get_bypass();
 	void set_bypass(int i);
+	int get_state();
 };
 
 std::string get_localplayer(rlua entity);

@@ -147,12 +147,7 @@ RERUN:
 	main.set_bypass(temp->get_bypass());
 	delete temp;
 
-	std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: MAIN THREAD CREATED (" << ")" << std::endl << std::endl;
-	main.lua_getfield(-10002, "print");
-	main.lua_pushstring("lua c test");
-	main.lua_pcall(1, 0, 0);
-	
-
+	std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: MAIN THREAD CREATED (" << main.get_state() << ")" << std::endl << std::endl;
 	std::cout << "[" << termcolor::magenta << "#" << termcolor::white << "]: LocalPlayer -> " << get_localplayer(main) << std::endl;
 
 	CL result;
@@ -172,8 +167,7 @@ RERUN:
 
 		if (result.errors == 1)
 		{
-			std::cout << "[" << termcolor::red << "ERROR" << termcolor::white << "]: " << result.error.c_str() <<
-				std::endl;
+			std::cout << "[" << termcolor::red << "ERROR" << termcolor::white << "]: " << result.error.c_str() << std::endl;
 		}
 	}
 

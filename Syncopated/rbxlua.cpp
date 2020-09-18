@@ -9,8 +9,6 @@
 
 #include "rbxlua.hpp"
 
-int rlua::state;
-
 rlua::rlua(int rL): interval(0)
 {
 	state = rL;
@@ -195,6 +193,11 @@ int rlua::get_bypass()
 void rlua::set_bypass(int i)
 {
 	interval = i;
+}
+
+int rlua::get_state()
+{
+	return state;
 }
 
 std::string get_localplayer(rlua entity)

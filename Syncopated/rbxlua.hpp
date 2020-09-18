@@ -21,12 +21,12 @@ namespace lua
 	
 	// PUSH ON STACK
 	typedef int(__stdcall* lua_pushstring_def)(int, const char*);
-	typedef int(__stdcall* lua_pushnumber_def)(int, double);
+	typedef int(__cdecl* lua_pushnumber_def)(int, double);
 	typedef int(__cdecl* lua_pushboolean_def)(int, bool);
 
 	//INDEX THROUGH STACK
 	typedef int(__fastcall* lua_getfield_def)(int, int, const char*);
-	typedef const char* (__fastcall* lua_tolstring_def)(int, int, size_t);
+	typedef const char* (__stdcall* lua_tolstring_def)(int, int, size_t);
 	
 	// EX.
 	typedef int (__cdecl* lua_pcall_def)(int, int, int, int);
@@ -45,7 +45,7 @@ public:
 	
 	// THREAD RELATED
 	const lua::lua_newthread_def lua_newthread_func = reinterpret_cast<lua::lua_newthread_def>(RLUA_NEWTHREAD_ADDR);
-	int lua_newthread(int thread = state);
+	int lua_newthread(int thread);
 
 	const lua::lua_gettop_def lua_gettop = reinterpret_cast<lua::lua_gettop_def>(RLUA_GETTOP_ADDR);
 

@@ -68,6 +68,22 @@ CL LC_Parser::do_string(std::vector<std::string> arg, rlua entity)
 		entity.lua_pushstring(c);
 	}
 
+	else if (arg.at(0) == "lua_pushnumber")
+	{
+		if (!(arg.size() == 2))
+		{
+			return c_error("invalid number of arguments for \"lua_pushnumber\"");
+		}
+
+		if (!c_isnumber(arg.at(1)))
+		{
+			return c_error("lua_pushboolean argument at 1 must be a number");
+		}
+
+		entity.lua_pushnumber(stoi(arg.at(1)));
+
+	}
+
 	else if (arg.at(0) == "lua_pcall")
 	{
 		if (!(arg.size() == 4))

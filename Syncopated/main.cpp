@@ -21,10 +21,10 @@ namespace lsh
 	static int rbx_L_orgiginal = 0;
 	static int* gettop_hook = reinterpret_cast<int*>(RLUA_GETTOP_ADDR);
 
-	int gettop_detour(int rState)
+	int gettop_detour(int a1)
 	{
-		rbx_L_orgiginal = rState;
-		return (*reinterpret_cast<DWORD*>(rState + 24) - *reinterpret_cast<DWORD*>(rState + 20)) >> 4;
+		rbx_L_orgiginal = a1;
+		return (*reinterpret_cast<DWORD*>(a1 + 8) - *reinterpret_cast<DWORD*>(a1 + 24)) >> 4;
 	}
 
 	void hook()
@@ -143,7 +143,7 @@ RERUN:
 	}
 
 	std::cout << std::endl << "[" << termcolor::magenta << "#" << termcolor::white << "]: CREATING NEW THREAD OFF OF TEMPORARY STATE" << std::endl;
-	rlua main(temp->lua_newthread());
+	rlua main(temp->lua_newthread(temp->get_state()));
 	main.set_bypass(temp->get_bypass());
 	delete temp;
 

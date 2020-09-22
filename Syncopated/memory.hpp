@@ -16,6 +16,7 @@
 #include <vector>
 
 /* - Memory Definitions - */
+
 class Memory
 {
 	struct Memdata

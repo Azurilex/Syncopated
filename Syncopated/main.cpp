@@ -13,8 +13,11 @@
 #include <algorithm>
 #pragma comment(lib, "Wintrust.lib")
 #include "c_execution.hpp"
+
 #include "Libraries/MinHook/MinHook.hpp"
 #pragma comment(lib, "Libraries/MinHook/libMinHook.x86.lib")
+
+#include "Libraries/json/json.hpp"
 
 namespace lsh
 {
@@ -52,6 +55,72 @@ int __stdcall main_entry()
 	subtitle("Syncopated - Debug Console\n");
 
 	std::cout << termcolor::white << std::endl << "hey mom, looK! the boys are back in town!!" << std::endl << std::endl;
+
+	using json = nlohmann::json;
+
+	CURL* curl = curl_easy_init(); //initialize libcurl
+	if (curl)
+	{
+		const std::string url("https://api.github.com/repos/Azurilex/Syncopated/releases/latest");
+
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str()); //set url
+		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+		curl_easy_setopt(curl, CURLOPT_USERAGENT, "curl/7.42.0");
+		curl_easy_setopt(curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4); //ipv4 only
+		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10); //timeout after 10 seconds
+		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L); //http redirects if needed
+
+		int http_code(0);
+		std::unique_ptr<std::string> http_data(new std::string()); //response info
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_callback); //pass data to callback
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, http_data.get()); //hook data container
+
+		const CURLcode result = curl_easy_perform(curl); //run httpget
+		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+		curl_easy_cleanup(curl);
+
+
+		if (result == CURLE_OK)
+		{
+			if (http_code == 200)
+			{
+				const json githubjson = json::parse(*http_data);
+
+				GithubVersion = githubjson["tag_name"];
+				GithubVersion.erase(remove(GithubVersion.begin(), GithubVersion.end(), '"'), GithubVersion.end());
+			}
+			else
+			{
+				std::cout << std::endl << termcolor::white << "[" << termcolor::red << "ERROR" << termcolor::white << "]: VERSION FETCH FAILED. HTTP RETURNED CODE: " << http_code << std::endl;
+			}
+		}
+		else
+		{
+			std::cout << std::endl << termcolor::white << "[" << termcolor::red << "ERROR" << termcolor::white << "]: VERSION FETCH FAILED. CURL RETURNED CODE: " << result << std::endl;
+		}
+	}
+
+	if (!GithubVersion.empty())
+	{
+		if (GithubVersion != SYNCOPATED_VERSION)
+		{
+			std::cout << termcolor::white << "[" << termcolor::yellow << "OUTDATED" << termcolor::white << "]: Please download the latest update of Syncopated here: https://github.com/Azurilex/Syncopated/releases  " << std::endl;
+			std::cout << "Would you like to continue anyways? (y/n): ";
+			std::string i;
+			std::cin >> i;
+
+			std::transform(i.begin(), i.end(), i.begin(), [](unsigned char c) { return std::tolower(c); });
+			if (i != "y" && i != "yes")
+			{
+				return 0;
+			}
+			std::cout << std::endl;
+		}
+	}
+	else
+	{
+		std::cout << termcolor::white << "[" << termcolor::red << "ERROR" << termcolor::white << "]: String \"GithubVersion\" is empty - something's wrong, check for an update on the Github page." << std::endl;
+	}
 
 	writeshell(reinterpret_cast<PBYTE>(WinVerifyTrust), {0x31, 0xC0, 0xC3});
 
@@ -152,7 +221,7 @@ RERUN:
 
 	CL result;
 	LC_Parser parser;
-	
+
 	while (true)
 	{
 		std::cout << termcolor::magenta << "> " << termcolor::white;

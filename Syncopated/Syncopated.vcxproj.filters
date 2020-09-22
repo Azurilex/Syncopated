@@ -22,6 +22,12 @@
     <Filter Include="Libraries\MinHook">
       <UniqueIdentifier>{b06db779-826d-4dc2-a0b2-a965b453b176}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libraries\curl">
+      <UniqueIdentifier>{a6863139-6a35-4c79-9d89-7536126a20f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\json">
+      <UniqueIdentifier>{f7d243b2-a35f-4f16-8da8-e207b5de95b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -67,6 +73,36 @@
     </ClInclude>
     <ClInclude Include="Libraries\MinHook\MinHook.hpp">
       <Filter>Libraries\MinHook</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\curl\easy.h">
+      <Filter>Libraries\curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\curl\mprintf.h">
+      <Filter>Libraries\curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\curl\multi.h">
+      <Filter>Libraries\curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\curl\stdcheaders.h">
+      <Filter>Libraries\curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\curl\system.h">
+      <Filter>Libraries\curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\curl\typecheck-gcc.h">
+      <Filter>Libraries\curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\curl\urlapi.h">
+      <Filter>Libraries\curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\curl\curl.h">
+      <Filter>Libraries\curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\curl\curlver.h">
+      <Filter>Libraries\curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\json\json.hpp">
+      <Filter>Libraries\json</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

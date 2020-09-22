@@ -20,6 +20,8 @@
 #define BRANDONBYPASS_DEF 2
 #define JBRRBYPASS_DEF 3
 
+#define SYNCOPATED_VERSION "v0.1.2-alpha"
+
 // OFFSETS
 #define PARENT_OFF 0x34
 
@@ -91,5 +93,6 @@ enum opcodes
 inline PDWORD ScriptContext;
 inline int DataModel;
 inline const char* PlayerName;
+inline std::string GithubVersion = "";
 
 #endif

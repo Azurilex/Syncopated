@@ -15,6 +15,8 @@ This method was widly used in 2016 to bypass retcheck. When an rLua C function i
 
 ## Contributing
 As most of you know, I love Github. So feel free to fork the repository and make pull requests as you please, I'm totally open to new ideas.
+### Current Issues
+Running Lua C API functions hardcoded works perfectly fine, however when you pass it through the parser, it shits the bed. Why? I have no fucking idea. Anyone who might know how to resolve this, please submit a pull request.
 
 ## Credits
 [@Azurilex](https://twitter.com/Azurilex) - Developing Syncopated, JBRR Retcheck bypass\
